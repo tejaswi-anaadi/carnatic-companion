@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(212,162,76,0.18), transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(155,28,28,0.10), transparent 50%),
+    #FBF5E9;
+  color: #1C1410;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: 0.01em;
+}
+
+/* Decorative temple border */
+.temple-border {
+  position: relative;
+}
+.temple-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid #D4A24C;
+  border-radius: inherit;
+  pointer-events: none;
+  mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.scrollbar-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #D4A24C; border-radius: 3px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+
+/* Subtle paper texture */
+.paper {
+  background-color: #FBF5E9;
+  background-image:
+    radial-gradient(rgba(155,28,28,0.04) 1px, transparent 1px),
+    radial-gradient(rgba(212,162,76,0.06) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px;
+  background-position: 0 0, 12px 12px;
+}
