@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
-import ChakraGrid from '../components/ChakraGrid.jsx'
+import MelakartaWheel from '../components/MelakartaWheel.jsx'
 import RagaCard from '../components/RagaCard.jsx'
 import RagaDetail from '../components/RagaDetail.jsx'
 import { CHAKRA_GROUPS, RAGAS } from '../lib/melakartha.js'
@@ -25,7 +25,14 @@ export default function RagasView({ initialRagaNumber = null }) {
       </header>
 
       {selectedChakra == null && (
-        <ChakraGrid selected={selectedChakra} onSelect={setSelectedChakra} />
+        <MelakartaWheel
+          onSelectChakra={(idx) => setSelectedChakra(idx)}
+          onSelectRaga={(num) => {
+            const r = RAGAS[num - 1]
+            setSelectedChakra(r.chakraIdx)
+            setSelectedRaga(num)
+          }}
+        />
       )}
 
       {selectedChakra != null && (

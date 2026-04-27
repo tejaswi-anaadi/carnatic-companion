@@ -43,6 +43,18 @@ h1, h2, h3, h4 {
   mask-composite: exclude;
 }
 
+/* Melakartha wheel entrance animation */
+.wheel-enter {
+  animation: wheelEntry 850ms cubic-bezier(0.16, 0.84, 0.24, 1) both;
+  transform-origin: center;
+  transform-box: view-box;
+}
+@keyframes wheelEntry {
+  0%   { transform: scale(0.35) rotate(-22deg); opacity: 0; }
+  60%  { opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
 .scrollbar-thin::-webkit-scrollbar { height: 6px; width: 6px; }
 .scrollbar-thin::-webkit-scrollbar-thumb { background: #D4A24C; border-radius: 3px; }
 .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
