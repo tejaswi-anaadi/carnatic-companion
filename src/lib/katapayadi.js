@@ -1,4 +1,4 @@
-// Katapayadi Sankhya decoder for Melakartha raga names.
+// Katapayadi Sankhya — utilities and direct mela-name lookup.
 //
 // Rule (Aṅkānāṃ Vāmato Gatiḥ — "the digits go right-to-left"):
 //   The first two CONSONANTS of the canonical raga name encode two digits;
@@ -68,16 +68,77 @@ export function decode(name) {
   }
 }
 
-// Lookup table for the cheat sheet.
-export const CHEAT_SHEET = [
-  { row: '1 (ka)', items: ['k → 1', 'ṭ → 1', 'p → 1', 'y → 1'] },
-  { row: '2 (kha)', items: ['kh → 2', 'ṭh → 2', 'ph → 2', 'r → 2'] },
-  { row: '3 (ga)', items: ['g → 3', 'ḍ → 3', 'b → 3', 'l → 3'] },
-  { row: '4 (gha)', items: ['gh → 4', 'ḍh → 4', 'bh → 4', 'v → 4'] },
-  { row: '5 (nga)', items: ['m → 5', 'ś → 5'] },
-  { row: '6 (cha)', items: ['c/ch → 6', 't → 6', 'ṣ → 6'] },
-  { row: '7 (chha)', items: ['th → 7', 's → 7'] },
-  { row: '8 (ja)', items: ['j → 8', 'd → 8', 'h → 8'] },
-  { row: '9 (jha)', items: ['jh → 9', 'dh → 9'] },
-  { row: '0 (nya/na)', items: ['ñ → 0', 'n → 0'] },
-]
+// ---------------------------------------------------------------------------
+// Direct name lookup against the actual sampoorna and asampoorna mela lists.
+// This replaces the earlier "decode the first two letters via Katapayadi"
+// approach, which gave wrong answers when the user typed a janya raga name
+// or a name whose first letters happened to encode a different mela's number.
+//
+// Strategy: normalize both the user's input and every canonical mela name
+// (Govinda + Asampoorna) to a canonical form that erases common
+// transliteration variants, then look for an exact match.
+// ---------------------------------------------------------------------------
+
+import { GOVINDA_NAMES } from './melakartha.js'
+import { ASAMPOORNA_SCALES } from './asampoornaScales.js'
+
+// Normalize a romanized raga name for fuzzy matching.
+//   - lowercase, strip non-letters
+//   - collapse aspirated/unaspirated digraphs (sh→s, dh→d, bh→b, ph→p,
+//     th→t, kh→k, gh→g, jh→j, ch→c)
+//   - collapse Tamil zh → l
+//   - drop trailing 'm' (handles -am vs -a vs -am final endings)
+//   - collapse repeated letters and adjacent vowels
+// So "Sankarabharanam", "Shankarabharanam", "Sankarabaranam",
+// "Shankarabaranam" all normalize to the same string.
+export function normalizeName(s) {
+  if (!s) return ''
+  let n = String(s).toLowerCase().replace(/[^a-z]/g, '')
+  // Order matters: digraphs before single chars.
+  n = n
+    .replace(/zh/g, 'l')
+    .replace(/sh/g, 's')
+    .replace(/chh/g, 'c').replace(/ch/g, 'c')
+    .replace(/kh/g, 'k')
+    .replace(/gh/g, 'g')
+    .replace(/jh/g, 'j')
+    .replace(/dh/g, 'd')
+    .replace(/th/g, 't')
+    .replace(/bh/g, 'b')
+    .replace(/ph/g, 'p')
+  // Drop trailing m (anusvara / case-marker variants).
+  n = n.replace(/m+$/, '')
+  // Collapse repeated letters.
+  n = n.replace(/(.)\1+/g, '$1')
+  return n
+}
+
+// Build the lookup table once at module load.
+const _LOOKUP = (() => {
+  const map = new Map() // normalized -> { number, source, matchedName }
+  for (let n = 1; n <= 72; n++) {
+    const sName = GOVINDA_NAMES[n - 1]
+    if (sName) {
+      const k = normalizeName(sName)
+      if (k && !map.has(k)) {
+        map.set(k, { number: n, source: 'sampoorna', matchedName: sName })
+      }
+    }
+    const asam = ASAMPOORNA_SCALES[n]
+    if (asam?.name) {
+      const k = normalizeName(asam.name)
+      if (k && !map.has(k)) {
+        map.set(k, { number: n, source: 'asampoorna', matchedName: asam.name })
+      }
+    }
+  }
+  return map
+})()
+
+// Look up a romanized raga name. Returns null if not a melakartha (sampoorna
+// or asampoorna). Returns { number, source, matchedName } on hit.
+export function findMelaByName(input) {
+  const key = normalizeName(input)
+  if (!key) return null
+  return _LOOKUP.get(key) ?? null
+}
