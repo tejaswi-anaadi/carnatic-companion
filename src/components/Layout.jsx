@@ -1,13 +1,41 @@
-import { Music2, Drum, ScrollText, Wrench, Sparkles } from 'lucide-react'
+import { Music2, Drum, ScrollText, Wrench, Sparkles, Languages } from 'lucide-react'
+import { useLanguage } from '../lib/i18n.jsx'
 
 const TABS = [
-  { id: 'ragas',   label: 'Ragas',   icon: Music2 },
-  { id: 'talas',   label: 'Talas',   icon: Drum },
-  { id: 'history', label: 'History', icon: ScrollText },
-  { id: 'tools',   label: 'Tools',   icon: Wrench },
+  { id: 'ragas',   label: 'Ragas',   labelSa: 'राग',   icon: Music2 },
+  { id: 'talas',   label: 'Talas',   labelSa: 'ताल',   icon: Drum },
+  { id: 'history', label: 'History', labelSa: 'इतिहास', icon: ScrollText },
+  { id: 'tools',   label: 'Tools',   labelSa: 'उपकरण',  icon: Wrench },
 ]
 
+function LanguageToggle({ className = '' }) {
+  const { lang, setLang } = useLanguage()
+  const isSa = lang === 'sa'
+  return (
+    <button
+      onClick={() => setLang(isSa ? 'en' : 'sa')}
+      className={
+        'group flex items-center gap-2 px-3 py-2 rounded-full border-2 transition text-sm font-semibold ' +
+        (isSa
+          ? 'bg-gold text-crimson-dark border-gold-dark shadow-temple'
+          : 'bg-cream/95 text-crimson border-gold/60 hover:border-gold hover:bg-gold/30 ') +
+        className
+      }
+      title={isSa ? 'Switch to English' : 'संस्कृत में देखें / Switch to Sanskrit'}
+      aria-label="Toggle language"
+    >
+      <Languages className="w-4 h-4" />
+      <span className={!isSa ? 'font-bold' : 'opacity-65'}>EN</span>
+      <span className="opacity-40">·</span>
+      <span className={isSa ? 'font-bold' : 'opacity-65'} style={{ fontFamily: '"Noto Sans Devanagari", "Sanskrit Text", serif' }}>
+        सं
+      </span>
+    </button>
+  )
+}
+
 export default function Layout({ active, onChange, children }) {
+  const { lang } = useLanguage()
   return (
     <div className="min-h-full md:flex">
       {/* Sidebar (md+) */}
@@ -28,8 +56,9 @@ export default function Layout({ active, onChange, children }) {
         </div>
 
         <nav className="px-4 flex flex-col gap-1 mt-2">
-          {TABS.map(({ id, label, icon: Icon }) => {
+          {TABS.map(({ id, label, labelSa, icon: Icon }) => {
             const isActive = active === id
+            const display = lang === 'sa' ? labelSa : label
             return (
               <button
                 key={id}
@@ -42,11 +71,15 @@ export default function Layout({ active, onChange, children }) {
                 }
               >
                 <Icon className={'w-5 h-5 ' + (isActive ? 'text-crimson-dark' : 'text-gold')} />
-                <span className="font-medium">{label}</span>
+                <span className="font-medium">{display}</span>
               </button>
             )
           })}
         </nav>
+
+        <div className="px-4 mt-4">
+          <LanguageToggle className="w-full justify-center" />
+        </div>
 
         <div className="mt-auto px-6 py-6 text-cream/60 text-xs leading-relaxed">
           <div className="border-t border-gold/30 pt-4">
@@ -60,8 +93,11 @@ export default function Layout({ active, onChange, children }) {
       <main className="flex-1 min-w-0 pb-24 md:pb-0">
         {/* Mobile header */}
         <header className="md:hidden sticky top-0 z-20 bg-crimson text-cream px-4 py-3 border-b-4 border-gold flex items-center gap-2 shadow">
-          <Sparkles className="w-5 h-5 text-gold" />
-          <h1 className="font-display text-xl font-bold">Carnatic Companion</h1>
+          <Sparkles className="w-5 h-5 text-gold shrink-0" />
+          <h1 className="font-display text-xl font-bold flex-1 truncate">
+            {lang === 'sa' ? 'कर्णाटक सङ्गीत साथी' : 'Carnatic Companion'}
+          </h1>
+          <LanguageToggle />
         </header>
 
         <div className="px-4 sm:px-6 md:px-10 py-6 md:py-10 max-w-6xl mx-auto">
@@ -71,8 +107,9 @@ export default function Layout({ active, onChange, children }) {
 
       {/* Bottom nav (mobile) */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-crimson border-t-4 border-gold flex">
-        {TABS.map(({ id, label, icon: Icon }) => {
+        {TABS.map(({ id, label, labelSa, icon: Icon }) => {
           const isActive = active === id
+          const display = lang === 'sa' ? labelSa : label
           return (
             <button
               key={id}
@@ -83,7 +120,7 @@ export default function Layout({ active, onChange, children }) {
               }
             >
               <Icon className={'w-5 h-5 ' + (isActive ? 'drop-shadow-[0_0_6px_rgba(212,162,76,0.7)]' : '')} />
-              <span className={isActive ? 'font-semibold' : ''}>{label}</span>
+              <span className={isActive ? 'font-semibold' : ''}>{display}</span>
             </button>
           )
         })}

@@ -1,4 +1,5 @@
 import { FAMILIES, JATHIS, NADAIS } from '../lib/talas.js'
+import { useT } from '../lib/i18n.jsx'
 
 export default function TalaSelector({
   family, onFamilyChange,
@@ -6,23 +7,27 @@ export default function TalaSelector({
   nadai, onNadaiChange,
   bpm, onBpmChange,
 }) {
+  const t = useT()
+  const isSa = t.lang === 'sa'
+  const labelFont = isSa ? 'font-devanagari' : 'font-display'
+
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-xs uppercase tracking-[0.2em] text-saffron mb-2">Family</label>
+        <label className="block text-xs uppercase tracking-[0.2em] text-saffron mb-2">{isSa ? 'ताल कुल' : 'Family'}</label>
         <div className="flex flex-wrap gap-1.5">
           {FAMILIES.map((f) => (
             <button
               key={f.name}
               onClick={() => onFamilyChange(f)}
               className={
-                'flex-1 min-w-[88px] px-2.5 py-2 rounded-md border text-sm font-display whitespace-nowrap transition ' +
+                'flex-1 min-w-[88px] px-2.5 py-2 rounded-md border text-sm whitespace-nowrap transition ' + labelFont + ' ' +
                 (family.name === f.name
                   ? 'bg-crimson text-cream border-gold shadow-temple'
                   : 'bg-cream border-gold/40 hover:border-gold')
               }
             >
-              <div className="leading-tight">{f.name}</div>
+              <div className="leading-tight">{t.talaFamily(f.name)}</div>
               <div className="text-[10px] font-mono mt-0.5 opacity-70 tracking-wider">{f.template.join(' ')}</div>
             </button>
           ))}
@@ -30,20 +35,20 @@ export default function TalaSelector({
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-[0.2em] text-saffron mb-2">Jathi (laghu beats)</label>
+        <label className="block text-xs uppercase tracking-[0.2em] text-saffron mb-2">{isSa ? 'जाति (लघु मात्रा)' : 'Jathi (laghu beats)'}</label>
         <div className="flex flex-wrap gap-1.5">
           {JATHIS.map((j) => (
             <button
               key={j.name}
               onClick={() => onJathiChange(j)}
               className={
-                'flex-1 min-w-[78px] px-2.5 py-2 rounded-md border text-sm font-display whitespace-nowrap transition ' +
+                'flex-1 min-w-[78px] px-2.5 py-2 rounded-md border text-sm whitespace-nowrap transition ' + labelFont + ' ' +
                 (jathi.name === j.name
                   ? 'bg-gold text-crimson-dark border-gold-dark font-semibold shadow-temple'
                   : 'bg-cream border-gold/40 hover:border-gold')
               }
             >
-              <div className="leading-tight">{j.name}</div>
+              <div className="leading-tight">{t.jathi(j.name)}</div>
               <div className="text-[10px] font-mono opacity-70">{j.beats}</div>
             </button>
           ))}
@@ -51,20 +56,20 @@ export default function TalaSelector({
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-[0.2em] text-saffron mb-2">Nadai / Gati (subdivisions)</label>
+        <label className="block text-xs uppercase tracking-[0.2em] text-saffron mb-2">{isSa ? 'नडै / गति (उपविभाग)' : 'Nadai / Gati (subdivisions)'}</label>
         <div className="flex flex-wrap gap-1.5">
           {NADAIS.map((n) => (
             <button
               key={n.name}
               onClick={() => onNadaiChange(n)}
               className={
-                'flex-1 min-w-[78px] px-2.5 py-2 rounded-md border text-sm font-display whitespace-nowrap transition ' +
+                'flex-1 min-w-[78px] px-2.5 py-2 rounded-md border text-sm whitespace-nowrap transition ' + labelFont + ' ' +
                 (nadai.name === n.name
                   ? 'bg-saffron text-cream border-saffron-dark shadow-temple'
                   : 'bg-cream border-gold/40 hover:border-gold')
               }
             >
-              <div className="leading-tight">{n.name}</div>
+              <div className="leading-tight">{t.nadai(n.name)}</div>
               <div className="text-[10px] font-mono opacity-70">{n.sub}</div>
             </button>
           ))}
@@ -73,7 +78,7 @@ export default function TalaSelector({
 
       <div>
         <label className="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-saffron mb-2">
-          Tempo (BPM)
+          {isSa ? 'लय (मात्रा/मिनट)' : 'Tempo (BPM)'}
           <span className="font-mono text-crimson font-bold text-sm normal-case">{bpm}</span>
         </label>
         <input
