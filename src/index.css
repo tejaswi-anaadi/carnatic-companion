@@ -11,10 +11,12 @@ html, body, #root {
   margin: 0;
 }
 
-/* Devanagari script support */
-:lang(sa), [lang="sa"] {
-  font-family: 'Noto Sans Devanagari', 'Noto Serif Devanagari', system-ui, sans-serif;
-}
+/* Devanagari script support — only applied to elements that explicitly opt
+   in via the .font-devanagari helper. We deliberately do NOT set the body
+   font from the html[lang="sa"] attribute, because that would also restyle
+   the Latin/English text in Sanskrit mode (Noto Sans Devanagari has Latin
+   glyphs that don't match Inter). The lang attribute stays for a11y / screen
+   readers but does not affect typography. */
 .devanagari, .font-devanagari {
   font-family: 'Noto Serif Devanagari', 'Noto Sans Devanagari', serif;
   letter-spacing: 0.01em;

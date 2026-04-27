@@ -1,4 +1,4 @@
-import { Music2, Drum, ScrollText, Wrench, Sparkles, Languages } from 'lucide-react'
+import { Music2, Drum, ScrollText, Wrench, Sparkles } from 'lucide-react'
 import { useLanguage } from '../lib/i18n.jsx'
 
 const TABS = [
@@ -15,20 +15,22 @@ function LanguageToggle({ className = '' }) {
     <button
       onClick={() => setLang(isSa ? 'en' : 'sa')}
       className={
-        'group flex items-center gap-2 px-3 py-2 rounded-full border-2 transition text-sm font-semibold ' +
-        (isSa
-          ? 'bg-gold text-crimson-dark border-gold-dark shadow-temple'
-          : 'bg-cream/95 text-crimson border-gold/60 hover:border-gold hover:bg-gold/30 ') +
+        'flex items-center justify-center gap-2 px-3 py-2 rounded-full border-2 border-gold bg-cream-dark hover:bg-gold/30 transition text-xs font-semibold ' +
         className
       }
-      title={isSa ? 'Switch to English' : 'संस्कृत में देखें / Switch to Sanskrit'}
+      title={isSa ? 'Switch to English' : 'Switch to Sanskrit'}
       aria-label="Toggle language"
     >
-      <Languages className="w-4 h-4" />
-      <span className={!isSa ? 'font-bold' : 'opacity-65'}>EN</span>
-      <span className="opacity-40">·</span>
-      <span className={isSa ? 'font-bold' : 'opacity-65'} style={{ fontFamily: '"Noto Sans Devanagari", "Sanskrit Text", serif' }}>
-        सं
+      <span className={!isSa ? 'text-crimson font-bold' : 'text-ink/50'}>English</span>
+      <span className="w-8 h-4 rounded-full bg-cream border border-gold relative">
+        <span
+          className={'absolute top-0.5 w-3 h-3 rounded-full bg-crimson transition-all ' + (isSa ? 'left-4' : 'left-0.5')}
+        />
+      </span>
+      <span
+        className={(isSa ? 'text-crimson font-bold' : 'text-ink/50') + ' font-devanagari'}
+      >
+        संस्कृतम्
       </span>
     </button>
   )
