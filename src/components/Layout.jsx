@@ -2,10 +2,10 @@ import { Music2, Drum, ScrollText, Wrench, Sparkles, Languages } from 'lucide-re
 import { useLanguage } from '../lib/i18n.jsx'
 
 const TABS = [
-  { id: 'ragas',   label: 'Ragas',   labelSa: 'राग',   icon: Music2 },
-  { id: 'talas',   label: 'Talas',   labelSa: 'ताल',   icon: Drum },
-  { id: 'history', label: 'History', labelSa: 'इतिहास', icon: ScrollText },
-  { id: 'tools',   label: 'Tools',   labelSa: 'उपकरण',  icon: Wrench },
+  { id: 'ragas',   label: 'Ragas',   icon: Music2 },
+  { id: 'talas',   label: 'Talas',   icon: Drum },
+  { id: 'history', label: 'History', icon: ScrollText },
+  { id: 'tools',   label: 'Tools',   icon: Wrench },
 ]
 
 function LanguageToggle({ className = '' }) {
@@ -35,7 +35,6 @@ function LanguageToggle({ className = '' }) {
 }
 
 export default function Layout({ active, onChange, children }) {
-  const { lang } = useLanguage()
   return (
     <div className="min-h-full md:flex">
       {/* Sidebar (md+) */}
@@ -56,9 +55,8 @@ export default function Layout({ active, onChange, children }) {
         </div>
 
         <nav className="px-4 flex flex-col gap-1 mt-2">
-          {TABS.map(({ id, label, labelSa, icon: Icon }) => {
+          {TABS.map(({ id, label, icon: Icon }) => {
             const isActive = active === id
-            const display = lang === 'sa' ? labelSa : label
             return (
               <button
                 key={id}
@@ -71,7 +69,7 @@ export default function Layout({ active, onChange, children }) {
                 }
               >
                 <Icon className={'w-5 h-5 ' + (isActive ? 'text-crimson-dark' : 'text-gold')} />
-                <span className="font-medium">{display}</span>
+                <span className="font-medium">{label}</span>
               </button>
             )
           })}
@@ -95,7 +93,7 @@ export default function Layout({ active, onChange, children }) {
         <header className="md:hidden sticky top-0 z-20 bg-crimson text-cream px-4 py-3 border-b-4 border-gold flex items-center gap-2 shadow">
           <Sparkles className="w-5 h-5 text-gold shrink-0" />
           <h1 className="font-display text-xl font-bold flex-1 truncate">
-            {lang === 'sa' ? 'कर्णाटक सङ्गीत साथी' : 'Carnatic Companion'}
+            Carnatic Companion
           </h1>
           <LanguageToggle />
         </header>
@@ -107,9 +105,8 @@ export default function Layout({ active, onChange, children }) {
 
       {/* Bottom nav (mobile) */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-crimson border-t-4 border-gold flex">
-        {TABS.map(({ id, label, labelSa, icon: Icon }) => {
+        {TABS.map(({ id, label, icon: Icon }) => {
           const isActive = active === id
-          const display = lang === 'sa' ? labelSa : label
           return (
             <button
               key={id}
@@ -120,7 +117,7 @@ export default function Layout({ active, onChange, children }) {
               }
             >
               <Icon className={'w-5 h-5 ' + (isActive ? 'drop-shadow-[0_0_6px_rgba(212,162,76,0.7)]' : '')} />
-              <span className={isActive ? 'font-semibold' : ''}>{display}</span>
+              <span className={isActive ? 'font-semibold' : ''}>{label}</span>
             </button>
           )
         })}

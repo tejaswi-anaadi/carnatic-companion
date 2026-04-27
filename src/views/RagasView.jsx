@@ -19,13 +19,11 @@ export default function RagasView({ initialRagaNumber = null }) {
   return (
     <div className="space-y-6">
       <header>
-        <h2 className={'text-3xl md:text-4xl text-crimson font-bold ' + (isSa ? 'font-devanagari' : 'font-display')}>
-          {isSa ? '७२ मेलकर्ता राग' : 'The 72 Melakartha Ragas'}
+        <h2 className="font-display text-3xl md:text-4xl text-crimson font-bold">
+          The 72 Melakartha Ragas
         </h2>
         <p className="text-ink/65 mt-1 text-sm md:text-base">
-          {isSa
-            ? 'बारह चक्र × छह राग। किसी चक्र पर टैप करके उसके छह मेल देखें, फिर किसी राग पर टैप करके उसका आरोहणम् और अवरोहणम् सुनें।'
-            : 'Twelve chakras × six ragas. Tap a chakra to explore its six melas, then a raga to hear its arohanam and avarohanam.'}
+          Twelve chakras × six ragas. Tap a chakra to explore its six melas, then a raga to hear its arohanam and avarohanam.
         </p>
       </header>
 
@@ -47,10 +45,10 @@ export default function RagasView({ initialRagaNumber = null }) {
               onClick={() => { setSelectedChakra(null); setSelectedRaga(null) }}
               className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-cream-dark border border-gold/40 text-crimson text-sm font-semibold hover:bg-gold hover:text-crimson-dark"
             >
-              <ChevronLeft className="w-4 h-4" /> {isSa ? 'चक्र' : 'Chakras'}
+              <ChevronLeft className="w-4 h-4" /> Chakras
             </button>
             <div className="text-ink/70 text-sm">
-              <span className={'text-saffron font-semibold ' + (isSa ? 'font-devanagari' : '')}>{t.chakra(chakra.idx)}</span> {isSa ? t.term('Chakra') : 'chakra'} · {chakra.meaning}
+              <span className={'text-saffron font-semibold ' + (isSa ? 'font-devanagari' : '')}>{t.chakra(chakra.idx)}</span> chakra · {chakra.meaning}
             </div>
           </div>
 

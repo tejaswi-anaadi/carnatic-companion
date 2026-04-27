@@ -22,10 +22,7 @@ html, body, #root {
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(212,162,76,0.18), transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(155,28,28,0.10), transparent 50%),
-    #FBF5E9;
+  background: #FBF5E9;
   color: #1C1410;
   -webkit-font-smoothing: antialiased;
 }

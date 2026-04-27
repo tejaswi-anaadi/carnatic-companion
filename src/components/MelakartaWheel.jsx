@@ -86,6 +86,9 @@ export default function MelakartaWheel({ onSelectChakra, onSelectRaga }) {
             // Tangential label inside the chakra ring.
             const isFlip = mid > 90 && mid < 270
             const labelR = (R_CENTER + R_CHAKRA_OUT) / 2
+            const chakraName = t.chakra(i)
+            // Devanagari needs slightly larger font to render conjuncts cleanly.
+            const chakraFontSize = isSa ? 11 : 9
 
             return (
               <g
@@ -116,25 +119,23 @@ export default function MelakartaWheel({ onSelectChakra, onSelectRaga }) {
                     x="0"
                     y={isFlip ? labelR + 1 : -labelR - 1}
                     fill="#FBF5E9"
-                    fontSize="9"
+                    fontSize={chakraFontSize}
                     fontWeight="700"
                     textAnchor="middle"
                     dominantBaseline="middle"
+                    fontFamily={isSa ? "'Noto Serif Devanagari', 'Noto Sans Devanagari', serif" : "'Cormorant Garamond', Georgia, serif"}
                     style={{
-                      fontFamily: isSa
-                        ? '"Noto Serif Devanagari", "Noto Sans Devanagari", serif'
-                        : '"Cormorant Garamond", Georgia, serif',
-                      letterSpacing: '0.03em',
+                      letterSpacing: isSa ? '0' : '0.03em',
                       paintOrder: 'stroke',
-                      stroke: 'rgba(0,0,0,0.18)',
-                      strokeWidth: 0.4,
+                      stroke: 'rgba(0,0,0,0.22)',
+                      strokeWidth: 0.5,
                     }}
                   >
-                    {t.chakra(i)}
+                    {chakraName}
                   </text>
                   <text
                     x="0"
-                    y={isFlip ? labelR + 9 : -labelR + 9}
+                    y={isFlip ? labelR + (isSa ? 11 : 9) : -labelR + (isSa ? 11 : 9)}
                     fill="rgba(251,245,233,0.75)"
                     fontSize="4.5"
                     textAnchor="middle"
@@ -214,33 +215,40 @@ export default function MelakartaWheel({ onSelectChakra, onSelectRaga }) {
                       : `rotate(${mid - 90}) translate(${R_RAGA_OUT + 5} 0)`
                   }
                 >
-                  {isHover && (
-                    <rect
-                      x={nameFlip ? -90 : -2}
-                      y="-7"
-                      width="92"
-                      height="14"
-                      rx="3"
-                      fill="#FBF5E9"
-                      stroke="#9B1C1C"
-                      strokeWidth="0.6"
-                      opacity="0.95"
-                    />
-                  )}
+                  {/* Hover pill: width auto-fits to the displayed name */}
+                  {isHover && (() => {
+                    const display = isSa ? t.govinda(r.number) : r.name
+                    const fontSize = isSa ? 12 : 11
+                    // Approximate per-char widths (em-based); Devanagari is wider on average.
+                    const charW = isSa ? 0.78 : 0.55
+                    const pillW = Math.max(display.length * fontSize * charW + 10, 60)
+                    const pillH = isSa ? 17 : 15
+                    return (
+                      <rect
+                        x={nameFlip ? -pillW : -3}
+                        y={-pillH / 2}
+                        width={pillW}
+                        height={pillH}
+                        rx="3"
+                        fill="#FBF5E9"
+                        stroke="#9B1C1C"
+                        strokeWidth="0.6"
+                        opacity="0.97"
+                      />
+                    )
+                  })()}
                   <text
                     x="0"
                     y="0"
                     fill={isHover ? '#9B1C1C' : '#1C1410'}
-                    fontSize={isHover ? 11 : 6.2}
+                    fontSize={isHover ? (isSa ? 12 : 11) : (isSa ? 6.8 : 6.2)}
                     fontWeight={isHover ? 800 : 500}
                     textAnchor={nameFlip ? 'end' : 'start'}
                     dominantBaseline="middle"
+                    fontFamily={isSa ? "'Noto Serif Devanagari', 'Noto Sans Devanagari', serif" : "'Cormorant Garamond', Georgia, serif"}
                     style={{
-                      fontFamily: isSa
-                        ? '"Noto Serif Devanagari", "Noto Sans Devanagari", serif'
-                        : '"Cormorant Garamond", Georgia, serif',
                       transition: 'fill 150ms, font-size 200ms cubic-bezier(0.2,0.7,0.2,1), font-weight 150ms',
-                      letterSpacing: isHover ? '0.02em' : '0',
+                      letterSpacing: isHover && !isSa ? '0.02em' : '0',
                     }}
                   >
                     {t.govinda(r.number)}
@@ -321,12 +329,12 @@ export default function MelakartaWheel({ onSelectChakra, onSelectRaga }) {
               {t.govinda(hoveredRagaObj.number)}
             </span>
             <span className="text-ink/60 text-xs">
-              {t.chakra(hoveredRagaObj.chakraIdx)} · {hoveredRagaObj.madhyamam === 'M1' ? (isSa ? t.term('Suddha Madhyama') : 'Suddha') : (isSa ? t.term('Prati Madhyama') : 'Prati')}
+              <span className={isSa ? 'font-devanagari' : ''}>{t.chakra(hoveredRagaObj.chakraIdx)}</span> · {hoveredRagaObj.madhyamam === 'M1' ? 'Suddha' : 'Prati'}
             </span>
           </div>
         ) : hoveredChakraObj ? (
           <div className="px-4 py-2 rounded-lg bg-cream-dark border-2 border-gold inline-flex items-baseline gap-3">
-            <span className="text-saffron font-mono text-sm font-bold">{isSa ? t.term('Chakra') : 'Chakra'} {hoveredChakraObj.idx + 1}</span>
+            <span className="text-saffron font-mono text-sm font-bold">Chakra {hoveredChakraObj.idx + 1}</span>
             <span className={'text-2xl text-crimson font-bold ' + (isSa ? 'font-devanagari' : 'font-display')}>
               {t.chakra(hoveredChakraObj.idx)}
             </span>
@@ -334,9 +342,7 @@ export default function MelakartaWheel({ onSelectChakra, onSelectRaga }) {
           </div>
         ) : (
           <p className="text-ink/55 text-sm italic">
-            {isSa
-              ? <>किसी भाग पर माउस ले जाएँ; <span className="text-crimson font-semibold">चक्र</span> पर क्लिक से 6 राग खुलेंगे, या बाहरी वलय में किसी <span className="text-crimson font-semibold">राग</span> पर क्लिक करके उसे सीधे खोलें।</>
-              : <>Hover any slice; click a <span className="text-crimson font-semibold">chakra</span> to expand its 6 ragas, or click a <span className="text-crimson font-semibold">raga</span> in the outer ring to open it directly.</>}
+            Hover any slice; click a <span className="text-crimson font-semibold">chakra</span> to expand its 6 ragas, or click a <span className="text-crimson font-semibold">raga</span> in the outer ring to open it directly.
           </p>
         )}
       </div>

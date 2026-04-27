@@ -5,7 +5,7 @@ import { SWARA_LABEL } from '../lib/swaras.js'
 import { useAudioEngine } from '../hooks/useAudioEngine.js'
 import { useT } from '../lib/i18n.jsx'
 
-function SwaraRow({ swaras, activeIdx, t, isSa }) {
+function SwaraRow({ swaras, activeIdx }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {swaras.map((sw, i) => {
@@ -14,14 +14,13 @@ function SwaraRow({ swaras, activeIdx, t, isSa }) {
           <span
             key={i}
             className={
-              'px-2.5 py-1 rounded-md text-sm transition ' +
-              (isSa ? 'font-devanagari ' : 'font-display ') +
+              'px-2.5 py-1 rounded-md text-sm font-display transition ' +
               (isActive
                 ? 'bg-gold text-crimson-dark shadow-glow scale-105'
                 : 'bg-cream-dark text-ink border border-gold/30')
             }
           >
-            {t.swara(sw)}
+            {SWARA_LABEL[sw] ?? sw}
           </span>
         )
       })}
@@ -88,15 +87,15 @@ export default function RagaDetail({ raga, useDikshitar, onToggleNaming }) {
       <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
         <div>
           <div className="text-xs uppercase tracking-[0.2em] text-saffron">
-            {isSa ? t.term('Mela') : 'Mela'} #{raga.number} · {t.chakra(raga.chakraIdx)} {isSa ? t.term('Chakra') : 'Chakra'} ({raga.positionInChakra})
+            Mela #{raga.number} · <span className={isSa ? 'font-devanagari' : ''}>{t.chakra(raga.chakraIdx)}</span> Chakra ({raga.positionInChakra})
           </div>
           <h2 className={'text-3xl md:text-4xl text-crimson font-bold mt-1 ' + (isSa ? 'font-devanagari' : 'font-display')}>
             {useDikshitar ? dikshitarDisplay : govindaDisplay}
           </h2>
           <p className="text-ink/60 text-sm italic mt-1">
             {useDikshitar
-              ? <>{isSa ? t.term('Sampoorna') : 'Sampoorna'} alias: <span className={'font-semibold not-italic ' + (isSa ? 'font-devanagari' : '')}>{govindaDisplay}</span></>
-              : <>{isSa ? t.term('Asampoorna') : 'Asampoorna'} alias: <span className={'font-semibold not-italic ' + (isSa ? 'font-devanagari' : '')}>{dikshitarDisplay}</span></>}
+              ? <>Sampoorna alias: <span className={'font-semibold not-italic ' + (isSa ? 'font-devanagari' : '')}>{govindaDisplay}</span></>
+              : <>Asampoorna alias: <span className={'font-semibold not-italic ' + (isSa ? 'font-devanagari' : '')}>{dikshitarDisplay}</span></>}
           </p>
         </div>
 
@@ -144,8 +143,8 @@ export default function RagaDetail({ raga, useDikshitar, onToggleNaming }) {
       <div className="space-y-4">
         <div>
           <div className="flex items-center justify-between mb-2">
-            <h3 className={'text-sm font-semibold text-ink/70 flex items-center gap-1.5 ' + (isSa ? 'font-devanagari' : '')}>
-              <ArrowUp className="w-4 h-4 text-saffron" /> {isSa ? t.term('Arohanam') : 'Arohanam'}
+            <h3 className="text-sm font-semibold text-ink/70 flex items-center gap-1.5">
+              <ArrowUp className="w-4 h-4 text-saffron" /> Arohanam
             </h3>
             <button
               onClick={() => (playing === 'aro' ? stop() : play('aro'))}
@@ -160,13 +159,13 @@ export default function RagaDetail({ raga, useDikshitar, onToggleNaming }) {
               {playing === 'aro' ? 'Stop' : 'Play'}
             </button>
           </div>
-          <SwaraRow swaras={arohanam} activeIdx={playing === 'aro' ? activeIdx.aro : -1} t={t} isSa={isSa} />
+          <SwaraRow swaras={arohanam} activeIdx={playing === 'aro' ? activeIdx.aro : -1} />
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-2">
-            <h3 className={'text-sm font-semibold text-ink/70 flex items-center gap-1.5 ' + (isSa ? 'font-devanagari' : '')}>
-              <ArrowDown className="w-4 h-4 text-saffron" /> {isSa ? t.term('Avarohanam') : 'Avarohanam'}
+            <h3 className="text-sm font-semibold text-ink/70 flex items-center gap-1.5">
+              <ArrowDown className="w-4 h-4 text-saffron" /> Avarohanam
             </h3>
             <button
               onClick={() => (playing === 'ava' ? stop() : play('ava'))}
@@ -181,7 +180,7 @@ export default function RagaDetail({ raga, useDikshitar, onToggleNaming }) {
               {playing === 'ava' ? 'Stop' : 'Play'}
             </button>
           </div>
-          <SwaraRow swaras={avarohanam} activeIdx={playing === 'ava' ? activeIdx.ava : -1} t={t} isSa={isSa} />
+          <SwaraRow swaras={avarohanam} activeIdx={playing === 'ava' ? activeIdx.ava : -1} />
         </div>
       </div>
 

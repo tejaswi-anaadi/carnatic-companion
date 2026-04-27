@@ -22,13 +22,11 @@ export default function TalasView() {
   return (
     <div className="space-y-6">
       <header>
-        <h2 className={'text-3xl md:text-4xl text-crimson font-bold ' + (isSa ? 'font-devanagari' : 'font-display')}>
-          {isSa ? 'सूळादि सप्त ताल' : 'Suladi Sapta Talas'}
+        <h2 className="font-display text-3xl md:text-4xl text-crimson font-bold">
+          Suladi Sapta Talas
         </h2>
         <p className="text-ink/65 mt-1 text-sm md:text-base">
-          {isSa
-            ? 'सात कुल, पाँच जाति, पाँच नडै — देखें और सुनें कि प्रत्येक ताल ताडन, विसर्जन और अङ्गुली गणना में कैसे प्रकट होता है।'
-            : 'Seven families, five jathis, five nadais — see and hear how each tala unfolds in claps, waves, and finger counts.'}
+          Seven families, five jathis, five nadais — see and hear how each tala unfolds in claps, waves, and finger counts.
         </p>
       </header>
 
@@ -45,11 +43,11 @@ export default function TalasView() {
         <div className="rounded-2xl bg-cream border-2 border-gold shadow-temple p-5 paper space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className={'text-2xl text-crimson font-semibold ' + (isSa ? 'font-devanagari' : 'font-display')}>
-                {t.talaFamily(tala.family)} · {t.jathi(tala.jathi)} {isSa ? t.term('Jathi') : 'jathi'}
+              <h3 className="font-display text-2xl text-crimson font-semibold">
+                {tala.family} · {tala.jathi} jathi
               </h3>
               <div className="text-xs text-ink/60 font-mono mt-0.5">
-                {isSa ? 'क्रम' : 'Template'}: {tala.template.join(' ')} · {isSa ? 'मात्रा' : 'Beats'}: {tala.angas.map((a) => a.beats).join(' + ')} = {tala.totalBeats}
+                Template: {tala.template.join(' ')} · Beats: {tala.angas.map((a) => a.beats).join(' + ')} = {tala.totalBeats}
               </div>
             </div>
             <button
@@ -62,7 +60,7 @@ export default function TalasView() {
               }
             >
               {isRunning ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-              {isSa ? (isRunning ? 'ताल रोकें' : 'ताल आरम्भ') : (isRunning ? 'Stop Tala' : 'Start Tala')}
+              {isRunning ? 'Stop Tala' : 'Start Tala'}
             </button>
           </div>
 
