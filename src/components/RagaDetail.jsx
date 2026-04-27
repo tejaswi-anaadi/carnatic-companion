@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Play, Square, ArrowUp, ArrowDown } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { Play, Square, ArrowUp, ArrowDown, Info } from 'lucide-react'
 import Piano from './Piano.jsx'
 import { SWARA_LABEL } from '../lib/swaras.js'
 import { useAudioEngine } from '../hooks/useAudioEngine.js'
@@ -33,8 +33,26 @@ export default function RagaDetail({ raga, useDikshitar, onToggleNaming }) {
   const [activeIdx, setActiveIdx] = useState({ aro: -1, ava: -1 })
   const [playing, setPlaying] = useState(null) // 'aro' | 'ava' | null
 
+  // Pick scale based on naming tradition.
+  const { arohanam, avarohanam, asampoornaNote, asampoornaDiffers } = useMemo(() => {
+    if (useDikshitar && raga.asampoorna) {
+      return {
+        arohanam: raga.asampoorna.arohanam,
+        avarohanam: raga.asampoorna.avarohanam,
+        asampoornaNote: raga.asampoorna.note,
+        asampoornaDiffers: !raga.asampoorna.sameAsParent,
+      }
+    }
+    return {
+      arohanam: raga.arohanam,
+      avarohanam: raga.avarohanam,
+      asampoornaNote: null,
+      asampoornaDiffers: false,
+    }
+  }, [raga, useDikshitar])
+
   const play = (which) => {
-    const seq = which === 'aro' ? raga.arohanam : raga.avarohanam
+    const seq = which === 'aro' ? arohanam : avarohanam
     setPlaying(which)
     audio.playSequence(
       seq,
@@ -95,9 +113,28 @@ export default function RagaDetail({ raga, useDikshitar, onToggleNaming }) {
       </div>
 
       {/* Madhyamam badge */}
-      <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full bg-crimson/10 border border-crimson/30 text-crimson text-xs">
-        {raga.madhyamam === 'M1' ? 'Suddha Madhyama (M1) · Poorvanga (1–36)' : 'Prati Madhyama (M2) · Uttaranga (37–72)'}
+      <div className="flex flex-wrap items-center gap-2 mb-5">
+        <span className="inline-flex items-center px-3 py-1 rounded-full bg-crimson/10 border border-crimson/30 text-crimson text-xs">
+          {raga.madhyamam === 'M1' ? 'Suddha Madhyama (M1) · Poorvanga (1–36)' : 'Prati Madhyama (M2) · Uttaranga (37–72)'}
+        </span>
+        {useDikshitar && asampoornaDiffers && (
+          <span className="inline-flex items-center px-3 py-1 rounded-full bg-saffron/15 border border-saffron/50 text-saffron-dark text-xs font-semibold">
+            Asampoorna form (janya) — differs from sampoorna parent
+          </span>
+        )}
+        {useDikshitar && raga.asampoorna && !asampoornaDiffers && (
+          <span className="inline-flex items-center px-3 py-1 rounded-full bg-gold/20 border border-gold text-crimson-dark text-xs">
+            Asampoorna form is sampoorna · same as parent
+          </span>
+        )}
       </div>
+
+      {useDikshitar && asampoornaNote && (
+        <div className="mb-4 flex gap-2 p-3 rounded-md bg-saffron/5 border-l-4 border-saffron text-sm text-ink/85">
+          <Info className="w-4 h-4 text-saffron shrink-0 mt-0.5" />
+          <span>{asampoornaNote}</span>
+        </div>
+      )}
 
       {/* Arohanam */}
       <div className="space-y-4">
@@ -119,7 +156,7 @@ export default function RagaDetail({ raga, useDikshitar, onToggleNaming }) {
               {playing === 'aro' ? 'Stop' : 'Play'}
             </button>
           </div>
-          <SwaraRow swaras={raga.arohanam} activeIdx={playing === 'aro' ? activeIdx.aro : -1} />
+          <SwaraRow swaras={arohanam} activeIdx={playing === 'aro' ? activeIdx.aro : -1} />
         </div>
 
         <div>
@@ -140,12 +177,12 @@ export default function RagaDetail({ raga, useDikshitar, onToggleNaming }) {
               {playing === 'ava' ? 'Stop' : 'Play'}
             </button>
           </div>
-          <SwaraRow swaras={raga.avarohanam} activeIdx={playing === 'ava' ? activeIdx.ava : -1} />
+          <SwaraRow swaras={avarohanam} activeIdx={playing === 'ava' ? activeIdx.ava : -1} />
         </div>
       </div>
 
       <div className="mt-6 pt-4 border-t border-gold/30">
-        <Piano activeSwara={activeSwara} ragaSwaras={raga.arohanam} />
+        <Piano activeSwara={activeSwara} ragaSwaras={arohanam} />
       </div>
     </div>
   )

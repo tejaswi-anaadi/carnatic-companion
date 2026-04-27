@@ -1,4 +1,5 @@
 // 72 Melakartha ragas, generated from Chakra rules.
+import { ASAMPOORNA_SCALES } from './asampoornaScales.js'
 
 export const CHAKRAS = [
   { idx: 0,  name: 'Indu',    meaning: 'Moon (1)' },
@@ -78,10 +79,23 @@ export function buildRaga(n) {
   const arohanam = ['S', ri, ga, ma, 'P', da, ni, "S'"]
   const avarohanam = [...arohanam].reverse()
 
+  // Asampoorna (Dikshitar tradition) form — may be janya (audava/shadava/vakra).
+  const asam = ASAMPOORNA_SCALES[n]
+  const asampoorna = asam ? {
+    name: asam.name,
+    arohanam: asam.arohanam,
+    avarohanam: asam.avarohanam,
+    sameAsParent: asam.sameAsParent,
+    note: asam.note,
+  } : null
+
+  // Use the dataset's asampoorna name if available; fall back to the parallel array.
+  const dikName = asam?.name ?? DIKSHITAR_NAMES[n - 1]
+
   return {
     number: n,
     name: GOVINDA_NAMES[n - 1],
-    dikshitarName: DIKSHITAR_NAMES[n - 1],
+    dikshitarName: dikName,
     chakra: CHAKRAS[chakraIdx],
     chakraIdx,
     positionInChakra,
@@ -89,6 +103,7 @@ export function buildRaga(n) {
     swaras: { ri, ga, ma, da, ni },
     arohanam,
     avarohanam,
+    asampoorna,
   }
 }
 
