@@ -12,7 +12,7 @@ export function useAudioEngine() {
       const Ctor = window.AudioContext || window.webkitAudioContext
       const ctx = new Ctor()
       const master = ctx.createGain()
-      master.gain.value = 0.6
+      master.gain.value = 0.95
       master.connect(ctx.destination)
       ctxRef.current = ctx
       masterGainRef.current = master
@@ -54,19 +54,19 @@ export function useAudioEngine() {
     let freq, q, vol, dur
     switch (kind) {
       case 'clap':
-        osc.type = 'square'; freq = 1400; q = 4; vol = 0.45; dur = 0.06; break
+        osc.type = 'square'; freq = 1400; q = 4; vol = 0.95; dur = 0.07; break
       case 'wave':
-        osc.type = 'sine'; freq = 520; q = 2; vol = 0.32; dur = 0.10; break
+        osc.type = 'sine'; freq = 520; q = 2; vol = 0.85; dur = 0.12; break
       case 'finger-1':
       case 'finger-2':
       case 'finger-3':
       case 'finger-4':
         osc.type = 'triangle'
         freq = 700 + (parseInt(kind.split('-')[1]) - 1) * 80
-        q = 3; vol = 0.22; dur = 0.05; break
+        q = 3; vol = 0.7; dur = 0.06; break
       case 'sub':
       default:
-        osc.type = 'sine'; freq = 2200; q = 8; vol = 0.12; dur = 0.02; break
+        osc.type = 'sine'; freq = 2200; q = 8; vol = 0.32; dur = 0.025; break
     }
 
     osc.frequency.setValueAtTime(freq, at)

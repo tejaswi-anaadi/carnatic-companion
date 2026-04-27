@@ -63,14 +63,14 @@ export default function TalaVisualizer({ tala, pos, isRunning, nadai }) {
                   <div
                     key={b.globalIdx}
                     className={
-                      'flex flex-col items-center justify-center px-1.5 py-1.5 rounded-md transition-all ' +
+                      'flex flex-col items-center justify-center px-2 py-2 rounded-lg transition-all ' +
                       (isActive
-                        ? 'bg-gold scale-110 shadow-glow'
+                        ? 'bg-gold scale-110 shadow-glow ring-2 ring-crimson'
                         : 'bg-cream border border-gold/30')
                     }
                   >
-                    <HandIcon action={b.action} active={isActive} size={32} />
-                    <span className={'text-[9px] font-medium mt-0.5 ' + (isActive ? 'text-crimson-dark' : 'text-ink/55')}>
+                    <HandIcon action={b.action} active={isActive} size={64} />
+                    <span className={'text-[11px] font-semibold mt-1 ' + (isActive ? 'text-crimson-dark' : 'text-ink/60')}>
                       {b.label}
                     </span>
                   </div>
