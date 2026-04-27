@@ -28,15 +28,19 @@ export function useMetronome({ audio, tala, nadai, bpm }) {
     setPos({ beatIdx: 0, subIdx: 0 })
   }, [])
 
-  const start = useCallback(() => {
+  const start = useCallback(async () => {
     if (!tala) return
-    audio.ensureCtx()
+    // Wait for the context to actually be in 'running' state before we
+    // capture currentTime as our nextNoteTime baseline. Otherwise on a
+    // suspended context the tick loop schedules everything in the past
+    // and nothing sounds.
+    const ctx = await audio.ensureRunning()
     const beats = flattenTalaBeats(tala)
     beatsRef.current = beats
     totalBeatsRef.current = beats.length
     counterRef.current = { beatIdx: 0, subIdx: 0 }
     setPos({ beatIdx: 0, subIdx: 0 })
-    nextNoteTimeRef.current = audio.getCtx().currentTime + 0.06
+    nextNoteTimeRef.current = ctx.currentTime + 0.08
     setIsRunning(true)
   }, [tala, audio])
 
@@ -47,8 +51,22 @@ export function useMetronome({ audio, tala, nadai, bpm }) {
     const ctx = audio.getCtx()
 
     const tick = () => {
+      // If the context drifts back to suspended (tab inactive, OS audio
+      // session interruption, etc.), bail this tick and try to resume.
+      // Without this, the loop keeps trying to schedule events on a
+      // dead context and the user hears silence with no obvious cause.
+      if (ctx.state !== 'running') {
+        ctx.resume().catch(() => {})
+        nextNoteTimeRef.current = ctx.currentTime + 0.08
+        return
+      }
       const sec = ctx.currentTime
       const subSec = 60 / bpm / nadai
+      // If we've fallen behind (e.g. main thread was blocked), skip
+      // forward instead of dumping a flurry of stale events.
+      if (nextNoteTimeRef.current < sec - 0.5) {
+        nextNoteTimeRef.current = sec + 0.05
+      }
       while (nextNoteTimeRef.current < sec + lookahead) {
         const { beatIdx, subIdx } = counterRef.current
         const beat = beatsRef.current[beatIdx]
@@ -85,9 +103,11 @@ export function useMetronome({ audio, tala, nadai, bpm }) {
   // If tala/nadai/bpm change while running, restart cleanly.
   useEffect(() => {
     if (!isRunning) return
-    counterRef.current = { beatIdx: 0, subIdx: 0 }
-    nextNoteTimeRef.current = audio.getCtx().currentTime + 0.06
-    setPos({ beatIdx: 0, subIdx: 0 })
+    audio.ensureRunning().then((ctx) => {
+      counterRef.current = { beatIdx: 0, subIdx: 0 }
+      nextNoteTimeRef.current = ctx.currentTime + 0.08
+      setPos({ beatIdx: 0, subIdx: 0 })
+    })
   }, [tala?.id, nadai, bpm]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => () => stop(), [stop])
