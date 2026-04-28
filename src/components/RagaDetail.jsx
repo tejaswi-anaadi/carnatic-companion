@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Play, Square, ArrowUp, ArrowDown, Info } from 'lucide-react'
 import Piano from './Piano.jsx'
+import KatapayadiCalculation from './KatapayadiCalculation.jsx'
 import { SWARA_LABEL } from '../lib/swaras.js'
 import { useAudioEngine } from '../hooks/useAudioEngine.js'
 import { useT } from '../lib/i18n.jsx'
@@ -83,6 +84,7 @@ export default function RagaDetail({ raga, useDikshitar, onToggleNaming }) {
   const dikshitarDisplay = t.dikshitar(raga.number, raga.dikshitarName)
 
   return (
+    <div className="space-y-5">
     <div className="rounded-2xl bg-cream border-2 border-gold shadow-temple p-5 md:p-6 paper">
       <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
         <div>
@@ -187,6 +189,10 @@ export default function RagaDetail({ raga, useDikshitar, onToggleNaming }) {
       <div className="mt-6 pt-4 border-t border-gold/30">
         <Piano activeSwara={activeSwara} ragaSwaras={arohanam} />
       </div>
+    </div>
+
+    {/* Katapayadi step-by-step derivation */}
+    <KatapayadiCalculation ragaNumber={raga.number} />
     </div>
   )
 }

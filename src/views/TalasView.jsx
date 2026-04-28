@@ -23,7 +23,7 @@ export default function TalasView() {
     <div className="space-y-6">
       <header>
         <h2 className="font-display text-3xl md:text-4xl text-crimson font-bold">
-          Suladi Sapta Talas
+          Sapta Talas
         </h2>
         <p className="text-ink/65 mt-1 text-sm md:text-base">
           Seven families, five jathis, five nadais — see and hear how each tala unfolds in claps, waves, and finger counts.
