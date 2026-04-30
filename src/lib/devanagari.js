@@ -419,6 +419,10 @@ export const TOWNS_DEVANAGARI = {
   Vaitheeswarankoil: 'वैद्येश्वरन्कोयिल्',
   Chidambaram: 'चिदम्बरम्',
   Ettayapuram: 'एट्टयापुरम्',
+  Tiruttani: 'तिरुत्तणि',
+  Tiruvannamalai: 'तिरुवण्णामलै',
+  Tiruvanaikaval: 'तिरुवानैक्कावल्',
+  Nagapattinam: 'नागपट्टिनम्',
   // Tamil Nadu state name (sometimes appended)
   'Tamil Nadu': 'तमिऴ्नाडु',
 }
@@ -435,6 +439,8 @@ export const TEMPLES_DEVANAGARI = {
   'Lalgudi Saptarishiswara': 'लालगुडि सप्तर्षीश्वर',
   'Sriranganathaswamy': 'श्रीरङ्गनाथस्वामी',
   'Tirupati Venkateswara': 'तिरुपति वेङ्कटेश्वर',
+  'Varadaraja Perumal': 'वरदराज पेरुमाळ्',
+  Sundareswarar: 'सुन्दरेश्वर',
 
   // Dikshitar's pilgrimage
   'Kashi Vishwanath': 'काशी विश्वनाथ',
@@ -443,6 +449,9 @@ export const TEMPLES_DEVANAGARI = {
   'Vaitheeswaran Koil': 'वैद्येश्वरन् कोयिल्',
   'Chidambaram Nataraja': 'चिदम्बरम् नटराज',
   'Ettayapuram Subramania': 'एट्टयापुरम् सुब्रह्मण्य',
+  'Subrahmanya Swami': 'सुब्रह्मण्यस्वामी',
+  Arunachaleswarar: 'अरुणाचलेश्वर',
+  Jambukeswarar: 'जम्बुकेश्वर',
 
   // Syama Sastri's pilgrimage
   'Bangaru Kamakshi': 'बङ्गारु कामाक्षी',

@@ -67,8 +67,49 @@ export default function TalasView() {
           <TalaVisualizer tala={tala} pos={pos} isRunning={isRunning} nadai={nadai} />
 
           <div className="text-[11px] text-ink/55 italic border-t border-gold/30 pt-3">
-            <strong className="not-italic text-crimson">Legend:</strong> Clap = palm strike (bright tick); Wave = palm flip (warm thud);
-            Finger 1–4 = pinky → ring → middle → index counts (soft tick). Subdivisions ({nadai.name} = {nadai.sub}) play as quiet sub-ticks between main beats.
+            <strong className="not-italic text-crimson">Legend for {tala.family} · {tala.jathi}:</strong>{' '}
+            {(() => {
+              const hasLaghu = tala.template.includes('I')
+              const hasDrutam = tala.template.includes('O')
+              const hasAnudrutam = tala.template.includes('U')
+              const laghuCount = tala.template.filter(t => t === 'I').length
+              const drutamCount = tala.template.filter(t => t === 'O').length
+              const fingerNames = ['pinky', 'ring', 'middle', 'index', 'thumb']
+              const fingerCount = tala.jathiBeats - 1 // fingers used per laghu
+              const maxFinger = Math.min(fingerCount, 5)
+              const usedFingers = fingerNames.slice(0, maxFinger).join(' → ')
+              const wraps = fingerCount > 5
+
+              const parts = []
+
+              // Laghu description
+              if (hasLaghu) {
+                const laghuLabel = laghuCount > 1 ? `${laghuCount} Laghus` : '1 Laghu'
+                parts.push(
+                  `${laghuLabel} (I): each has 1 clap (palm down) + ${fingerCount} finger count${fingerCount !== 1 ? 's' : ''} — ${usedFingers}${wraps ? ' (then repeats from pinky)' : ''}`
+                )
+              }
+
+              // Drutam description
+              if (hasDrutam) {
+                const drutamLabel = drutamCount > 1 ? `${drutamCount} Drutams` : '1 Drutam'
+                parts.push(
+                  `${drutamLabel} (O): each has 1 clap + 1 wave/veechu (palm flipped up)`
+                )
+              }
+
+              // Anudrutam description
+              if (hasAnudrutam) {
+                parts.push('1 Anudrutam (U): a single clap')
+              }
+
+              // Nadai
+              parts.push(
+                `Subdivisions: ${nadai.name} nadai (${nadai.sub} sub-ticks per beat)`
+              )
+
+              return parts.join('. ') + '.'
+            })()}
           </div>
         </div>
       </div>

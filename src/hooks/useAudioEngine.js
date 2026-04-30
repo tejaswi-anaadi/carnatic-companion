@@ -124,6 +124,7 @@ export function useAudioEngine() {
       case 'finger-2':
       case 'finger-3':
       case 'finger-4':
+      case 'finger-5':
         osc.type = 'triangle'
         freq = 700 + (parseInt(kind.split('-')[1]) - 1) * 80
         q = 3; vol = 0.7; dur = 0.06; break

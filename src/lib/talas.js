@@ -35,10 +35,10 @@ function angaActions(type, jathiBeats) {
     { action: 'clap', label: 'Clap' },
     { action: 'wave', label: 'Wave' },
   ]
-  // Laghu: clap, then (jathi - 1) finger counts, pinky -> ring -> middle -> index -> pinky-2 ...
+  // Laghu: clap, then (jathi - 1) finger counts, pinky -> ring -> middle -> index -> thumb (then wraps)
   const out = [{ action: 'clap', label: 'Clap' }]
   for (let i = 1; i < jathiBeats; i++) {
-    const fingerIdx = ((i - 1) % 4) + 1 // 1..4 (then wraps)
+    const fingerIdx = ((i - 1) % 5) + 1 // 1..5: pinky, ring, middle, index, thumb (then wraps)
     out.push({ action: `finger-${fingerIdx}`, label: `Finger ${i}` })
   }
   return out
