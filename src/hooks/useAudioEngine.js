@@ -9,11 +9,9 @@ import { SWARA_SEMITONE, semitoneToFreq } from '../lib/swaras.js'
 // Ragas) browsers run out of allowed contexts, and previously-created ones
 // can drift into the 'suspended' / 'interrupted' states with no obvious
 // recovery path — which is exactly the "sound just stops working, refresh
-// doesn't help" symptom the user reported. (Refresh fixes it for *that*
-// frame, but on slow connects the AC is created mid-interaction and ends
-// up suspended again.)
+// doesn't help" symptom the user reported.
 //
-// We now share ONE context across the whole app, eagerly resume it on every
+// We share ONE context across the whole app, eagerly resume it on every
 // playback call, clamp scheduled events to never land in the past, and
 // listen for visibilitychange to nudge the context back to running when
 // the tab returns to the foreground.
@@ -22,6 +20,21 @@ import { SWARA_SEMITONE, semitoneToFreq } from '../lib/swaras.js'
 let CTX = null
 let MASTER = null
 let ACTIVE_CANCEL = null
+
+// "Tracker" sink for the currently-active playback session. When a
+// playback method (playSequence/playFrequencies/playNotes) wants to
+// capture every oscillator it creates so it can yank them on stop(), it
+// installs an array here for the duration of its scheduling pass. Any
+// scheduleTone/scheduleClick call that happens while ACTIVE_TRACKER is
+// non-null pushes its source nodes into the array.
+//
+// This is the missing half of "stop": the audio events were being
+// scheduled directly on the AudioContext timeline via osc.start(t0) /
+// osc.stop(t0+dur), so cancelling JS setTimeouts only stopped the
+// highlight callbacks. The notes themselves played to completion. Now,
+// on cancel, we walk the tracker and force-stop every still-pending
+// oscillator with a brief fade.
+let ACTIVE_TRACKER = null
 
 function getOrCreateCtx() {
   if (!CTX) {
@@ -37,8 +50,6 @@ function getOrCreateCtx() {
   return CTX
 }
 
-// Returns a Promise that resolves once the context is in 'running' state.
-// Safe to call from any user gesture; safe to call repeatedly.
 async function ensureRunning() {
   const ctx = getOrCreateCtx()
   if (ctx.state !== 'running') {
@@ -51,9 +62,6 @@ async function ensureRunning() {
   return ctx
 }
 
-// Wake the context up when the tab returns to foreground or the page
-// regains focus. This handles the common "switched tabs, came back, no
-// sound" failure mode.
 if (typeof document !== 'undefined') {
   const wake = () => {
     if (CTX && CTX.state !== 'running') {
@@ -67,22 +75,45 @@ if (typeof document !== 'undefined') {
   window.addEventListener('pageshow', wake)
 }
 
-// Clamp a scheduled audio time so it's always at least a hair in the
-// future. Web Audio silently drops events scheduled in the past, which
-// is the other half of the "no sound" bug — if the context paused while
-// the user was idle, currentTime advanced but our nextNoteTime ref did
-// not, so all subsequent scheduled events fell behind.
 function safeAt(ctx, at) {
   return Math.max(at, ctx.currentTime + 0.005)
+}
+
+// Fade-and-stop a single tracked source. The brief linear ramp avoids the
+// "click" you'd hear from yanking a running oscillator instantaneously.
+// Wrapped in try/catch because the source may already have stopped on
+// its own by the time we get here.
+function killSource({ osc, gain, scheduledEnd }) {
+  if (!osc) return
+  const ctx = CTX
+  if (!ctx) return
+  const now = ctx.currentTime
+  // Already finished — nothing to do.
+  if (scheduledEnd != null && scheduledEnd <= now) return
+  const FADE = 0.015
+  try {
+    gain.gain.cancelScheduledValues(now)
+    // Pin whatever the gain is right now so the ramp starts from the
+    // current envelope position, not from a stale scheduled value.
+    const cur = gain.gain.value
+    gain.gain.setValueAtTime(cur, now)
+    gain.gain.linearRampToValueAtTime(0.0001, now + FADE)
+    osc.stop(now + FADE + 0.005)
+  } catch (_e) {
+    // Already-stopped oscillators throw on .stop() — ignore.
+  }
+}
+
+function killAllSources(sources) {
+  if (!sources || sources.length === 0) return
+  for (const s of sources) killSource(s)
+  sources.length = 0
 }
 
 export function useAudioEngine() {
   const cancelRef = useRef(null)
 
   const ensureCtx = useCallback(() => {
-    // Fire-and-forget resume; return the (possibly still-resuming) ctx
-    // so synchronous callers can read currentTime, etc. Async callers
-    // should use ensureRunning directly.
     ensureRunning()
     return getOrCreateCtx()
   }, [])
@@ -102,8 +133,12 @@ export function useAudioEngine() {
     gain.gain.linearRampToValueAtTime(0.0001, t0 + durSec)
     osc.connect(gain)
     gain.connect(MASTER)
+    const scheduledEnd = t0 + durSec + 0.05
     osc.start(t0)
-    osc.stop(t0 + durSec + 0.05)
+    osc.stop(scheduledEnd)
+    const handle = { osc, gain, scheduledEnd }
+    if (ACTIVE_TRACKER) ACTIVE_TRACKER.push(handle)
+    return handle
   }, [])
 
   const scheduleClick = useCallback((at, kind = 'clap') => {
@@ -142,49 +177,142 @@ export function useAudioEngine() {
     osc.connect(filter)
     filter.connect(gain)
     gain.connect(MASTER)
+    const scheduledEnd = t0 + dur + 0.02
     osc.start(t0)
-    osc.stop(t0 + dur + 0.02)
+    osc.stop(scheduledEnd)
+    const handle = { osc, gain, scheduledEnd }
+    if (ACTIVE_TRACKER) ACTIVE_TRACKER.push(handle)
+    return handle
   }, [])
 
-  const playSequence = useCallback((swaras, noteMs = 450, onNoteStart, onDone) => {
-    // Cancel any existing sequence in flight (across components — the
-    // singleton CANCEL means hitting Play in Talas while a raga is
-    // playing also stops the raga, which is the right behaviour).
+  // Helper for the three tone-sequence playback methods. Sets up a
+  // tracker so every scheduleTone() during `scheduleFn` is captured;
+  // returns a cancel() that fades the tracked sources, clears timers,
+  // and detaches the tracker.
+  const startSession = useCallback((scheduleFn) => {
     if (ACTIVE_CANCEL) ACTIVE_CANCEL()
-    let cancelled = false
+    const sources = []
     const timers = []
+    let cancelled = false
+
+    // Install tracker for the synchronous-ish duration of scheduling.
+    // Async scheduleFns must opt back in by setting ACTIVE_TRACKER
+    // themselves before/during their inner forEach (we expose it via
+    // the second arg below).
+    const trackerHook = {
+      attach() { ACTIVE_TRACKER = sources },
+      detach() { if (ACTIVE_TRACKER === sources) ACTIVE_TRACKER = null },
+      sources,
+      timers,
+      isCancelled: () => cancelled,
+    }
+
     const cancel = () => {
       cancelled = true
       timers.forEach(clearTimeout)
+      timers.length = 0
+      killAllSources(sources)
+      trackerHook.detach()
     }
     ACTIVE_CANCEL = cancel
     cancelRef.current = cancel
 
-    // Resume first, then schedule against the *post-resume* currentTime.
-    // Awaiting here is essential: if the context was suspended, the old
-    // code scheduled everything against a stale time, so the entire
-    // sequence landed in the past and never sounded.
-    ensureRunning().then((ctx) => {
-      if (cancelled) return
-      const startCtxTime = ctx.currentTime + 0.06
-      const noteSec = noteMs / 1000
-      swaras.forEach((sw, i) => {
-        const semi = SWARA_SEMITONE[sw] ?? 0
-        const at = startCtxTime + i * noteSec
-        scheduleTone(at, semitoneToFreq(semi), noteSec * 0.92, 'triangle', 0.32)
-        const delayMs = (at - ctx.currentTime) * 1000
-        timers.push(setTimeout(() => {
-          if (!cancelled && onNoteStart) onNoteStart(sw, i)
-        }, Math.max(0, delayMs)))
+    scheduleFn(trackerHook)
+    return cancel
+  }, [])
+
+  const playFrequencies = useCallback((freqs, noteMs = 450, onNoteStart, onDone) => {
+    startSession((session) => {
+      ensureRunning().then((ctx) => {
+        if (session.isCancelled()) return
+        session.attach()
+        try {
+          const startCtxTime = ctx.currentTime + 0.06
+          const noteSec = noteMs / 1000
+          const sustain = Math.min(noteSec * 0.92, noteSec - 0.012)
+          freqs.forEach((freq, i) => {
+            if (!Number.isFinite(freq) || freq <= 0) return
+            const at = startCtxTime + i * noteSec
+            scheduleTone(at, freq, sustain, 'triangle', 0.32)
+            const delayMs = (at - ctx.currentTime) * 1000
+            session.timers.push(setTimeout(() => {
+              if (!session.isCancelled() && onNoteStart) onNoteStart(freq, i)
+            }, Math.max(0, delayMs)))
+          })
+          session.timers.push(setTimeout(() => {
+            if (!session.isCancelled() && onDone) onDone()
+          }, freqs.length * noteMs + 60))
+        } finally {
+          session.detach()
+        }
       })
-      timers.push(setTimeout(() => {
-        if (!cancelled && onDone) onDone()
-      }, swaras.length * noteMs + 60))
     })
-  }, [scheduleTone])
+  }, [scheduleTone, startSession])
+
+  const playNotes = useCallback((notes, onNoteStart, onDone) => {
+    startSession((session) => {
+      ensureRunning().then((ctx) => {
+        if (session.isCancelled()) return
+        session.attach()
+        try {
+          const startCtxTime = ctx.currentTime + 0.06
+          let cursorMs = 0
+          notes.forEach((n, i) => {
+            const at = startCtxTime + cursorMs / 1000
+            const durSec = n.durMs / 1000
+            const sustain = Math.max(0.02, Math.min(durSec * 0.94, durSec - 0.012))
+            if (Number.isFinite(n.freq) && n.freq > 0) {
+              scheduleTone(at, n.freq, sustain, 'triangle', 0.32)
+            }
+            const delayMs = (at - ctx.currentTime) * 1000
+            session.timers.push(setTimeout(() => {
+              if (!session.isCancelled() && onNoteStart) onNoteStart(n, i)
+            }, Math.max(0, delayMs)))
+            cursorMs += n.durMs
+          })
+          session.timers.push(setTimeout(() => {
+            if (!session.isCancelled() && onDone) onDone()
+          }, cursorMs + 60))
+        } finally {
+          session.detach()
+        }
+      })
+    })
+  }, [scheduleTone, startSession])
+
+  const playSequence = useCallback((swaras, noteMs = 450, onNoteStart, onDone) => {
+    startSession((session) => {
+      ensureRunning().then((ctx) => {
+        if (session.isCancelled()) return
+        session.attach()
+        try {
+          const startCtxTime = ctx.currentTime + 0.06
+          const noteSec = noteMs / 1000
+          swaras.forEach((sw, i) => {
+            const semi = SWARA_SEMITONE[sw] ?? 0
+            const at = startCtxTime + i * noteSec
+            scheduleTone(at, semitoneToFreq(semi), noteSec * 0.92, 'triangle', 0.32)
+            const delayMs = (at - ctx.currentTime) * 1000
+            session.timers.push(setTimeout(() => {
+              if (!session.isCancelled() && onNoteStart) onNoteStart(sw, i)
+            }, Math.max(0, delayMs)))
+          })
+          session.timers.push(setTimeout(() => {
+            if (!session.isCancelled() && onDone) onDone()
+          }, swaras.length * noteMs + 60))
+        } finally {
+          session.detach()
+        }
+      })
+    })
+  }, [scheduleTone, startSession])
 
   const stop = useCallback(() => {
     if (cancelRef.current) cancelRef.current()
+    // Also clear any active session that didn't originate from THIS hook
+    // instance (e.g. metronome's). Safety net so a globally-pressed Stop
+    // really stops everything.
+    if (ACTIVE_CANCEL) ACTIVE_CANCEL()
   }, [])
 
   useEffect(() => () => {
@@ -199,6 +327,8 @@ export function useAudioEngine() {
     scheduleTone,
     scheduleClick,
     playSequence,
+    playFrequencies,
+    playNotes,
     stop,
   }
 }

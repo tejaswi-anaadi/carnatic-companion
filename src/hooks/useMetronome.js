@@ -18,6 +18,24 @@ export function useMetronome({ audio, tala, nadai, bpm }) {
   const counterRef = useRef({ beatIdx: 0, subIdx: 0 })
   const intervalRef = useRef(null)
   const totalBeatsRef = useRef(0)
+  // Track scheduled-but-not-yet-played clicks so stop() can yank them.
+  // Without this, clicks already scheduled within the 100ms lookahead
+  // window keep firing after the user hits Stop.
+  const sourcesRef = useRef([])
+  const visualTimersRef = useRef([])
+
+  const killSource = ({ osc, gain, scheduledEnd }) => {
+    if (!osc) return
+    const ctx = audio.getCtx()
+    const now = ctx.currentTime
+    if (scheduledEnd != null && scheduledEnd <= now) return
+    try {
+      gain.gain.cancelScheduledValues(now)
+      gain.gain.setValueAtTime(gain.gain.value, now)
+      gain.gain.linearRampToValueAtTime(0.0001, now + 0.01)
+      osc.stop(now + 0.015)
+    } catch (_e) { /* already stopped */ }
+  }
 
   const stop = useCallback(() => {
     setIsRunning(false)
@@ -25,8 +43,15 @@ export function useMetronome({ audio, tala, nadai, bpm }) {
       clearInterval(intervalRef.current)
       intervalRef.current = null
     }
+    // Kill any clicks already on the audio timeline.
+    sourcesRef.current.forEach(killSource)
+    sourcesRef.current = []
+    // Cancel pending visual updates so the cursor freezes immediately.
+    visualTimersRef.current.forEach(clearTimeout)
+    visualTimersRef.current = []
     setPos({ beatIdx: 0, subIdx: 0 })
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audio])
 
   const start = useCallback(async () => {
     if (!tala) return
@@ -62,6 +87,9 @@ export function useMetronome({ audio, tala, nadai, bpm }) {
       }
       const sec = ctx.currentTime
       const subSec = 60 / bpm / nadai
+      // Prune already-finished click handles so the array stays small
+      // during long sessions.
+      sourcesRef.current = sourcesRef.current.filter((h) => h && h.scheduledEnd > sec)
       // If we've fallen behind (e.g. main thread was blocked), skip
       // forward instead of dumping a flurry of stale events.
       if (nextNoteTimeRef.current < sec - 0.5) {
@@ -70,16 +98,15 @@ export function useMetronome({ audio, tala, nadai, bpm }) {
       while (nextNoteTimeRef.current < sec + lookahead) {
         const { beatIdx, subIdx } = counterRef.current
         const beat = beatsRef.current[beatIdx]
-        if (subIdx === 0) {
-          // Main beat: action sound.
-          audio.scheduleClick(nextNoteTimeRef.current, beat.action)
-        } else {
-          audio.scheduleClick(nextNoteTimeRef.current, 'sub')
-        }
+        const handle = subIdx === 0
+          ? audio.scheduleClick(nextNoteTimeRef.current, beat.action)
+          : audio.scheduleClick(nextNoteTimeRef.current, 'sub')
+        if (handle) sourcesRef.current.push(handle)
         // Update visible state — slightly delayed to align with audio.
         const visualDelay = Math.max(0, (nextNoteTimeRef.current - ctx.currentTime) * 1000)
         const snapshot = { beatIdx, subIdx }
-        setTimeout(() => setPos(snapshot), visualDelay)
+        const t = setTimeout(() => setPos(snapshot), visualDelay)
+        visualTimersRef.current.push(t)
 
         // Advance counter
         let nSub = subIdx + 1

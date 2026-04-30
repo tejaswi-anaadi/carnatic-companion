@@ -1,8 +1,9 @@
-import { Music2, Drum, ScrollText, Wrench, Sparkles } from 'lucide-react'
+import { Music2, Drum, ScrollText, Wrench, Sparkles, ListMusic } from 'lucide-react'
 import { useLanguage } from '../lib/i18n.jsx'
 
 const TABS = [
   { id: 'ragas',   label: 'Ragas',   icon: Music2 },
+  { id: 'varisai', label: 'Varisai', icon: ListMusic },
   { id: 'talas',   label: 'Talas',   icon: Drum },
   { id: 'history', label: 'History', icon: ScrollText },
   { id: 'tools',   label: 'Tools',   icon: Wrench },
