@@ -388,7 +388,7 @@ const varaVeena = {
       L(['S','R','G','.','G','.',  'G','R','P','G','R','.'],
         ['Sa','ra','si','-','ja','-', 'sa','na','Ja','na','ni','-'], _mohanam),
       L(['S','R','S','G','R','S',  'R','D','+S','.','+S','.'],
-        ['Ja','ya','ja','ya','ja','ya', 'Ja','ya','ja','-','ya','-'], _mohanam),
+        ['Ja','ya','ja','ya','ja','ya', 'Ja','Ya','Va','-','Ni','-'], _mohanam),
     ]},
   ],
 }
