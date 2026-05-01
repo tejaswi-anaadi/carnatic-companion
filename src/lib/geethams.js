@@ -369,9 +369,9 @@ const varaVeena = {
     "Ranganaayaki, granter of all desires, mother of Brahma the lotus-seated. Victory!",
   sections: [
     { label: 'Geetham', lines: [
-      L(['G','G','P','.','P','.',  'D','P','+S','.','+S','.'],
+      L(['G','G','P','.','P','.',  'P','D','+S','.','+S','.'],
         ['Va','ra','vee','-','na','-', 'Mru','du','Pa','-','ni','-'], _mohanam),
-      L(['R','S','D','D','P','.',  'D','P','G','G','R','.'],
+      L(['+R','+S','D','D','P','.',  'D','P','G','G','R','.'],
         ['Va','na','ru','ha','Lo','-', 'cha','na','Raa','-','ni','-'], _mohanam),
       L(['G','P','D','+S','D','.',  'D','P','G','G','R','.'],
         ['Su','ru','chi','ra','Bam','-', 'bha','ra','Ve','-','ni','-'], _mohanam),
@@ -379,7 +379,7 @@ const varaVeena = {
         ['Su','ra','nu','tha','Kal','-', 'ya','-','-','-','ni','-'], _mohanam),
       L(['G','G','G','G','R','G',  'P','G','P','.','P','.'],
         ['Ni','ru','pa','ma','Shu','bha', 'Gu','na','Lo','-','la','-'], _mohanam),
-      L(['G','G','D','P','D','.',  'D','P','+S','.','+S','.'],
+      L(['G','G','D','P','D','.',  'P','D','+S','.','+S','.'],
         ['Ni','ra','thi','Ja','ya','-', 'Pra','da','See','-','la','-'], _mohanam),
       L(['D','G','R','R','S','S',  'D','+S','D','D','D','P'],
         ['Va','ra','da','-','Pri','ya', 'Ran','ga','naa','-','ya','ki'], _mohanam),
@@ -387,8 +387,8 @@ const varaVeena = {
         ['Vaa','-','nchi','tha','Pha','la', 'Daa','-','-','-','ya','ki'], _mohanam),
       L(['S','R','G','.','G','.',  'G','R','P','G','R','.'],
         ['Sa','ra','si','-','ja','-', 'sa','na','Ja','na','ni','-'], _mohanam),
-      L(['S','R','S','G','R','S'],
-        ['Ja','ya','ja','ya','ja','ya'], _mohanam),
+      L(['S','R','S','G','R','S',  'R','D','+S','.','+S','.'],
+        ['Ja','ya','ja','ya','ja','ya', 'Ja','ya','ja','-','ya','-'], _mohanam),
     ]},
   ],
 }
