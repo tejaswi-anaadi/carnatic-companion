@@ -1,13 +1,14 @@
-import { Music2, Drum, ScrollText, Wrench, Sparkles, ListMusic, Mic2 } from 'lucide-react'
+import { Music2, Drum, ScrollText, Wrench, Sparkles, ListMusic, Mic2, Music4 } from 'lucide-react'
 import { useLanguage } from '../lib/i18n.jsx'
 
 const TABS = [
-  { id: 'ragas',    label: 'Ragas',    icon: Music2 },
-  { id: 'varisai',  label: 'Varisai',  icon: ListMusic },
-  { id: 'geethams', label: 'Geethams', icon: Mic2 },
-  { id: 'talas',    label: 'Talas',    icon: Drum },
-  { id: 'history',  label: 'History',  icon: ScrollText },
-  { id: 'tools',    label: 'Tools',    icon: Wrench },
+  { id: 'ragas',         label: 'Ragas',        icon: Music2 },
+  { id: 'varisai',       label: 'Varisai',      icon: ListMusic },
+  { id: 'geethams',      label: 'Geethams',     icon: Mic2 },
+  { id: 'nottuswarams',  label: 'Nottuswarams', icon: Music4 },
+  { id: 'talas',         label: 'Talas',        icon: Drum },
+  { id: 'history',       label: 'History',      icon: ScrollText },
+  { id: 'tools',         label: 'Tools',        icon: Wrench },
 ]
 
 function LanguageToggle({ className = '' }) {
