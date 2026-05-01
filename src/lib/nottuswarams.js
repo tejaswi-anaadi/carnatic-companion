@@ -180,9 +180,11 @@ const sakthi = {
         ['san','-','ka',  'rA','-','di',  'sE','-','vi',  'tham','-','vi']),
       L(['G','.','G',  'G','M','G',  'R','S','R',  'S','R','G'],
         ['rak','-','tha',  'sa','ka','la',  'mu','ni','va',  'ra','su','ra']),
-      // Row 4 (per user correction): M , G R G R | -P N R | S , ,
+      // Row 4 (per user correction): M , G R G R | -P -N R | S , ,
+      // Both -P and -N are mandara stayi — the N must descend with the P,
+      // not jump up to madhya, otherwise the phrase contour breaks.
       // Lyric: Ra (kaarvai) ja vi nu tha gu ru gu ham (kaarvai kaarvai)
-      L(['M','.','G','R','G','R',  '-P','N','R',  'S','.','.'],
+      L(['M','.','G','R','G','R',  '-P','-N','R',  'S','.','.'],
         ['Ra','-','ja','vi','nu','tha',  'gu','ru','gu',  'ham','-','-']),
       L(['R','.','.',  '-N','.','-P',  'S','.','G',  'R','.','.'],
         ['bhak','-','-',  'thA','-','ni',  'pO','-','sha',  'kam','-','-']),
