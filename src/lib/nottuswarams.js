@@ -367,11 +367,11 @@ const mucukundaVarada = {
       L(['S','R','G','.','G',  'G','R','G',  'P','.','M','M','.','G',  'R','.','R','R','R1','R'],
         ['mu','chu','kun','-','da',  'va','ra','da',  'thyā','-','ga','rā','-','ja',  'sun','-','da','ra','ta','ra']),
       // Line 2 — pādāra vindasarasa mandahāsa vadanajayavibhō
-      // M,,G,R | S,SSNS | G,RR,S | NDNP N S,,,,, — N in "S S N S" dips
-      // to mandara (-N) under S; closing mandara descent -N -D -N -P -N
-      // resolves to madhya S held for 5 cells (vibhō sustained).
-      L(['M','.','.','G','.','R',  'S','.','S','S','-N','S',  'G','.','R','R','.','S',  '-N','-D','-N','-P','-N','S','.','.','.','.','.'],
-        ['pā','-','-','dā','-','ra',  'vin','-','da','sa','ra','sa',  'man','-','da','hā','-','sa',  'va','da','na','ja','ya','vi','bhō','-','-','-','-']),
+      // M,,G,R | S,SSNS | G,RR,S | NDNPDNS,,,,, — N in "S S N S" dips
+      // to mandara (-N) under S; closing mandara descent -N -D -N -P -D
+      // -N resolves to madhya S held for 5 trailing kaarvais (bhō sustained).
+      L(['M','.','.','G','.','R',  'S','.','S','S','-N','S',  'G','.','R','R','.','S',  '-N','-D','-N','-P','-D','-N','S','.','.','.','.','.'],
+        ['pā','-','-','dā','-','ra',  'vin','-','da','sa','ra','sa',  'man','-','da','hā','-','sa',  'va','da','na','ja','ya','vi','bhō','-','-','-','-','-']),
       // Line 3 — mukunda pūji tāṁgadhavala sundaratara
       // GP,G | P,G | D,P PMG | R,RRRR — peaks on madhya P/D, R₁ only on
       // the 4th R of the closing tail; others R₂.
