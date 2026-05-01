@@ -271,6 +271,12 @@ function IntroView() {
           <div key={i} className="space-y-2">
             <h3 className="font-display text-xl md:text-2xl text-crimson font-bold">{sec.heading}</h3>
             <p className="text-ink/85 leading-relaxed text-sm md:text-base">{sec.body}</p>
+            {sec.note && (
+              <p className="rounded-md bg-saffron/10 border-l-4 border-saffron px-3 py-2 text-xs md:text-sm text-ink/80 leading-relaxed">
+                <span className="font-semibold text-crimson uppercase tracking-wider text-[10px] mr-1">Note ·</span>
+                {sec.note}
+              </p>
+            )}
           </div>
         ))}
       </section>
@@ -523,6 +529,13 @@ export default function NottuswaramsView() {
             {item.meaning && (
               <div className="rounded-md bg-saffron/5 border-l-4 border-saffron px-4 py-2.5 text-sm text-ink/80 italic leading-relaxed">
                 {item.meaning}
+              </div>
+            )}
+
+            {item.notes && (
+              <div className="rounded-md bg-crimson/5 border-l-4 border-crimson px-4 py-2.5 text-sm text-ink/85 leading-relaxed">
+                <span className="font-semibold text-crimson uppercase tracking-wider text-[10px] mr-1">Note ·</span>
+                {item.notes}
               </div>
             )}
 

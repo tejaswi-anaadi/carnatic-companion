@@ -41,6 +41,9 @@ function expand(tok, scale) {
   let oct = 0
   if (tok.startsWith('+')) { oct = 1; tok = tok.slice(1) }
   else if (tok.startsWith('-') && tok.length > 1) { oct = -1; tok = tok.slice(1) }
+  // Direct two-letter tokens (e.g. "R1", "D1") — used for anya-swaras like
+  // shuddha rishabham in mucukundavarada. Bypass the raga's letter map.
+  if (/^[SRGMPDN][123]$/.test(tok)) return { sw: tok, oct }
   return { sw: resolveSwara(tok, scale.map), oct }
 }
 
@@ -314,6 +317,126 @@ const vandeMeenakshi = {
   ],
 }
 
+// =========================================================================
+// 7. Mucukunda Varada  (Tisram)
+// =========================================================================
+// Tisra-jathi tala. **Anya-swara**: this composition is famous for using
+// shuddha rishabham (R₁) — NOT the standard chathushruthi R₂ of
+// Sankarabharanam — in the descending "RRRRR" phrases that close lines 1
+// and 3 ("sundara-kara" and "sundara-tara"). Per the source PDF and the
+// user's correction, those five r's are encoded directly as "R1" so they
+// bypass the raga's letter map and sound the shuddha pitch.
+//
+// Notation source: scanned page 5 (Samskriti Foundation), transcribed
+// approximately — gamaka markings (shake, slide) shown in the PDF have
+// been preserved as plain notes; a future pass can encode them.
+const mucukundaVarada = {
+  id: 'mucukunda',
+  title: 'Mucukunda Varada',
+  number: 7,
+  composer: 'Muthuswami Dikshitar',
+  language: 'Sanskrit',
+  ragam: SANKARABHARANAM,
+  talam: { name: 'Tisram', jathi: 'Tisra', aksharas: 3 },
+  cellsPerAvarta: 18,
+  barsAt: [4, 9, 13],
+  bigBarsAt: [18],
+  meaning:
+    'Boon-giver to Mucukunda — the king who slept in a cave for an age and was awakened by ' +
+    'Krishna to incinerate Kalayavana with a glance. Salutations to Tyaga-raja, lovely-handed, ' +
+    'lotus-faced, lord whose smile (manda-hāsa) gladdens the worlds — to Brahma-worshipped ' +
+    'Guruguha, the auspicious one.',
+  notes:
+    'Uses shuddha rishabham (R₁) as anya-swara in the closing "sundara-kara" / "sundara-tara" ' +
+    'phrases — a distinctive feature of this composition.',
+  sections: [
+    { label: 'Geetham', lines: [
+      // Row 1 — eduppu (4 cells: rest, rest, mandara S, R) then main (5+4+5).
+      L(['.','.','-S','R',   'G','G','G','R','G',   'P','M','M','G',   'R1','R1','R1','R1','R1'],
+        ['-','-','mu','cu',  'kuṁ','da','va','ra','da',  'tyā','ga','rā','ja',  'suṁ','da','ra','ka','ra']),
+      // Row 2 — pā-dā-ra | viṁ-da-sa-ra-sa | maṁ-da-hā-sa | va-da-na-ja-ya-vi
+      L(['M','G','R',   '-S','S','S','-N','S',   'G','R','R','S',   '-N','-D','-P','-P','-D','-N'],
+        ['pā','dā','ra',  'viṁ','da','sa','ra','sa',  'maṁ','da','hā','sa',  'va','da','na','ja','ya','vi']),
+      // Row 3 (Charanam) — sustained S+pickup g | kuṁda-pūji | tāṁ-ga-dha-va-ḷa | sundara-tara (R₁×5)
+      L(['S','.','.','G',   'P','G','P','G',   'D','-P','M','G','P',   'R1','R1','R1','R1','R1'],
+        ['bhō','-','-','mu',  'kuṁ','da','pū','ji',  'tāṁ','ga','dha','va','ḷa',  'suṁ','da','ra','ta','ra']),
+      // Row 4 — mirrors row 2 melodically with the closing "guruguha" sahitya.
+      L(['M','G','R',   '-S','S','S','-N','S',   'G','R','R','S',   '-N','-D','-P','-P','-D','-N'],
+        ['naṁ','dī','śa',  'naṁ','di','ta','su','ra',  'bṛṁ','da','vaṁ','di',  'ta','gu','ru','gu','ha','gu']),
+      // Row 5 — final sustain on S.
+      L(['S','.','.','.'],
+        ['rō','-','-','-']),
+    ]},
+  ],
+}
+
+// =========================================================================
+// 8. Kamalasana Vandita  (Adi)
+// =========================================================================
+// Adi tala layout. Notation source: Samskriti Foundation 2017 PDF (page 1
+// notation, page 2 sahitya). The PDF uses a uppercase/lowercase visual
+// convention for note duration that we collapse to plain madhya stayi here;
+// dotted-below letters (ṇ, ḍ) are mandara stayi and encoded with the "-"
+// prefix. Cell counts vary per row — bars show at the four PDF cell
+// boundaries where they line up.
+const kamalasanaVandita = {
+  id: 'kamalasana',
+  title: 'Kamalasana Vandita',
+  number: 8,
+  composer: 'Muthuswami Dikshitar',
+  language: 'Sanskrit',
+  ragam: SANKARABHARANAM,
+  talam: { name: 'Adi', jathi: 'Chathurasra', aksharas: 8 },
+  cellsPerAvarta: 14,
+  barsAt: [3, 6, 10],
+  bigBarsAt: [14],
+  meaning:
+    'Salutation to her at whose lotus feet Brahma (the lotus-seated, kamalAsana) bows — ' +
+    'mother of Guruguha, dwelling in the heart of Vishnu (kamalA-pati), goddess of speech ' +
+    '(vAgdEvi), Kamakshi, Kalyani, consort of Kameshvara.',
+  sections: [
+    { label: 'Pallavi', lines: [
+      // Row 1: G g m | R r g | S . S . | S . R G  (kamalAsana vandita padAbjE)
+      L(['G','G','M',   'R','R','G',   'S','.','S','.',   'S','.','R','G'],
+        ['ka','ma','lA',  'sa','na','van',  'di','-','ta','-',  'pa','-','dA','bjE']),
+      // Row 2: M m p | G g m | R . R . | R . P M  (kamaneeya karOdaya sAmrAjyE)
+      L(['M','M','P',   'G','G','M',   'R','.','R','.',   'R','.','P','M'],
+        ['ka','ma','nee',  'ya','ka','rO',  'da','-','ya','-',  'sA','-','mrAj','yE']),
+      // Row 3: same melody as Row 1 (kamalA nagarE sakalA dhArE)
+      L(['G','G','M',   'R','R','G',   'S','.','S','.',   'S','.','R','G'],
+        ['ka','ma','lA',  'na','ga','rE',  'sa','-','ka','-',  'lA','-','dhA','rE']),
+      // Row 4: m g r s | -N s r g | S . S . | S . P M  (kamala nayana dhruta jagadA dhArE)
+      L(['M','G','R','S',   '-N','S','R','G',   'S','.','S','.',   'S','.','P','M'],
+        ['ka','ma','la','na',  'ya','na','dhru','ta',  'ja','-','ga','-',  'dA','-','dhA','rE']),
+    ]},
+    { label: 'Anupallavi', lines: [
+      // Row 5: G s -N | D D P | P M G M | R . P M  (kamalE vimalE guruguha janani)
+      L(['G','S','-N',   'D','D','P',   'P','M','G','M',   'R','.','P','M'],
+        ['ka','ma','lE',  'vi','ma','lE',  'gu','ru','gu','ha',  'ja','-','na','ni']),
+      // Row 6: G s -N | -D -P M G | R R | R . P M  (kamalA pati nuta hrudayE mAyE)
+      L(['G','S','-N',   '-D','-P','M','G',   'R','R',   'R','.','P','M'],
+        ['ka','ma','lA',  'pa','ti','nu','ta',  'hru','da',  'yE','-','mA','yE']),
+      // Row 7: G P M G | R M G R | S . S . | S . G M  (kamala sashi vijaya vadanE mEyE)
+      L(['G','P','M','G',   'R','M','G','R',   'S','.','S','.',   'S','.','G','M'],
+        ['ka','ma','la','sa',  'shi','vi','ja','ya',  'va','-','da','-',  'nE','-','mE','yE']),
+    ]},
+    { label: 'Charanam', lines: [
+      // Row 8: P . P . | P . +S . | P . P . | P . S P  (kamalEndrAni vAgdEvi sri)
+      L(['P','.','P','.',   'P','.','+S','.',   'P','.','P','.',   'P','.','S','P'],
+        ['ka','-','ma','-',  'lE','-','ndrA','-',  'ni','-','vAg','-',  'dE','-','vi','sri']),
+      // Row 9: P D P | M G M | R . R . | . . G M  (gouri poojithE hrudayA nandE)
+      L(['P','D','P',   'M','G','M',   'R','.','R','.',   '.','.','G','M'],
+        ['gou','ri','poo',  'ji','thE','hru',  'da','-','yA','-',  '-','-','nan','dE']),
+      // Row 10: same as Row 8 (kamalAkshi pAhi kAmAkshi)
+      L(['P','.','P','.',   'P','.','+S','.',   'P','.','P','.',   'P','.','S','P'],
+        ['ka','-','ma','-',  'lA','-','kshi','-',  'pA','-','hi','-',  'kA','-','mA','kshi']),
+      // Row 11: G M P M | G R G R | S N | S . .  (kAmEshvara vara sati kalyAni)
+      L(['G','M','P','M',   'G','R','G','R',   'S','N',   'S','.','.'],
+        ['kA','mE','shva','ra',  'va','ra','sa','ti',  'kal','yA',  'ni','-','-']),
+    ]},
+  ],
+}
+
 // ---------------------------------------------------------------------------
 // History / Introduction page content (rendered before the first composition).
 // ---------------------------------------------------------------------------
@@ -349,6 +472,10 @@ export const NOTTUSWARAM_INTRO = {
           'others link it to the village band tradition of "Note bands" played at colonial ' +
           'parades, weddings, and church services. Either way, the name itself flags these as ' +
           'the "Western-note songs" of the Dikshitar canon.',
+        note:
+          'Pronunciation: say it as "NOTE-u swaram" (a soft, English "note") — NOT "nott-tu" ' +
+          'with a retroflex doubled "tt". The Tamil spelling reflects the English source word, ' +
+          'so the cleaner the "note" sound, the closer to the original.',
       },
       {
         heading: 'How did Dikshitar come to compose them?',
@@ -417,6 +544,8 @@ export const NOTTUSWARAMS = [
   varaSivaBalam,
   ramaJanardhana,
   vandeMeenakshi,
+  mucukundaVarada,
+  kamalasanaVandita,
 ]
 
 export function getNottuswaramById(id) {
