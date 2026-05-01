@@ -7,9 +7,12 @@ import { useAudioEngine } from '../hooks/useAudioEngine.js'
 import Piano from '../components/Piano.jsx'
 
 const BASE_BPM = 72
+// Per user feedback: what was the previous 2nd speed (mult 0.6, ~250ms /
+// cell) is the comfortable beginner pace, so it's now 1st Speed. The new
+// 2nd Speed doubles that (the traditional kalam relationship).
 const SPEEDS = [
-  { id: 1, label: '1st Speed', mult: 1 },
-  { id: 2, label: '2nd Speed', mult: 0.6 },
+  { id: 1, label: '1st Speed', mult: 0.6 },
+  { id: 2, label: '2nd Speed', mult: 0.3 },
 ]
 
 // Combined picker list — intro page first, then the compositions.
