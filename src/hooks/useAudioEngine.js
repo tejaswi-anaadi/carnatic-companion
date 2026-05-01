@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { SWARA_SEMITONE, semitoneToFreq } from '../lib/swaras.js'
 
 // ---------------------------------------------------------------------------
@@ -319,7 +319,12 @@ export function useAudioEngine() {
     if (cancelRef.current) cancelRef.current()
   }, [])
 
-  return {
+  // Memoize the returned API so callers see a stable reference across
+  // renders. Without this, useMetronome's `useEffect(() => () => stop(), [stop])`
+  // cleanup fires on every render — because `stop` depends on `audio` and
+  // `audio` was a fresh object each time — which would set isRunning(false)
+  // immediately after start() set it true, so the metronome never ticked.
+  return useMemo(() => ({
     ensureCtx,
     ensureRunning,
     getCtx: getOrCreateCtx,
@@ -330,5 +335,5 @@ export function useAudioEngine() {
     playFrequencies,
     playNotes,
     stop,
-  }
+  }), [ensureCtx, scheduleTone, scheduleClick, playSequence, playFrequencies, playNotes, stop])
 }
