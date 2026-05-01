@@ -83,10 +83,13 @@ const syamale = {
         ['SyA','-','-','ma',  'lE','-','Mee','-',  'na','-','-','-',  'kshi','-','-','-']),
       L(['D','.','.','N',  '+S','.','+S','N',  'D','.','P','.',  'M','.','G','.'],
         ['Sun','-','-','da',  'rE','-','swa','ra',  'sA','-','-','-',  'Kshi','-','-','-']),
+      // Lines 3 & 4: "Guruguha" starts on R₂ (cell 6), continues through S
+      // at cell 14 ("Sa-"), then row 4 carries "(Sa-)mudh-bha-ve Si-ve-va".
+      // Cells 6, 8, 12 of row 4 (-N, S, S) carry "Si ve va".
       L(['M','.','D','.',  'M','.','R','.',  'G','.','P','.',  'G','.','S','.'],
-        ['San','-','ka','-',  'ri','-','-','-',  'Gu','-','ru','-',  'Gu','-','ha','-']),
+        ['San','-','ka','-',  'ri','-','Gu','-',  'Ru','-','Gu','-',  'ha','-','Sa-','-']),
       L(['R','.','M','.',  'R','.','-N','.',  'S','.','.','.',  'S','.','.','.'],
-        ['Sa','-','mu','-',  'dh','-','bha','-',  've','-','-','-',  'Si','-','va','-']),
+        ['mudh','-','bha','-',  've','-','Si','-',  've','-','-','-',  'va','-','-','-']),
       L(['P','.','.','.',  'P','.','P','.',  'M','.','.','.',  'M','.','M','.'],
         ['pA','-','-','-',  'ma','-','ra','-',  'mO','-','-','-',  'cha','-','ni','-']),
       L(['G','.','.','.',  'G','.','G','.',  'R','.','.','.',  'R','.','R','.'],
@@ -126,12 +129,15 @@ const santhatham = {
         ['san','-','tha','-','tham','-',  'pA','-','-','hi','mAm','-']),
       L(['G','.','G','.','M','.',  'G','.','.','R','S','.'],
         ['san','-','gee','-','tha','-',  'syA','-','-','ma','lE','-']),
-      L(['R','.','S','.','-N','.',  'S','.','.','-P','-D','-N'],
-        ['sar','-','vA','-','dhA','-',  'rE','-','-','Ja','na','ni']),
+      // Line 3: 1 kaarvai after S (not 2), so "Janani" lands one slot earlier.
+      L(['R','.','S','.','-N','.',  'S','.','-P','-D','-N','.'],
+        ['sar','-','vA','-','dhA','-',  'rE','-','Ja','na','ni','-']),
       L(['R','.','S','.','-N','.',  'S','.','.','.','.','.'],
         ['sar','-','vA','-','dhA','-',  'rE','-','-','-','-','-']),
+      // Line 5: lyric correction — "thA" (intent/purpose) not "dha" — yields
+      // "chinthithArtha-pradE" = grants the contemplated wish.
       L(['P','.','P','.','P','.',  'P','.','.','M','G','.'],
-        ['chin','-','thin','-','thAr','-',  'dha','-','-','pra','dE','-']),
+        ['chin','-','thin','-','thAr','-',  'thA','-','-','pra','dE','-']),
       L(['M','.','M','.','M','.',  'M','.','.','G','R','.'],
         ['Chi','-','th','-','rU','-',  'pi','-','-','nee','si','vE']),
       L(['G','.','M','G','R','S',  'G','.','.','M','P','.'],
@@ -174,9 +180,10 @@ const sakthi = {
         ['san','-','ka',  'rA','-','di',  'sE','-','vi',  'tham','-','vi']),
       L(['G','.','G',  'G','M','G',  'R','S','R',  'S','R','G'],
         ['rak','-','tha',  'sa','ka','la',  'mu','ni','va',  'ra','su','ra']),
-      // Row 4: PDF correction — col 2 expanded to 4 cells (extra R), col 3 = "P. N R".
-      L(['M','.','G',  'R','G','S','R',  '-P','N','R',  'S','.','.'],
-        ['rA','-','ja',  'vi','-','nu','tha',  'Gu','ru','gu',  'ham','-','-']),
+      // Row 4 (per user correction): M , G R G R | -P N R | S , ,
+      // Lyric: Ra (kaarvai) ja vi nu tha gu ru gu ham (kaarvai kaarvai)
+      L(['M','.','G','R','G','R',  '-P','N','R',  'S','.','.'],
+        ['Ra','-','ja','vi','nu','tha',  'gu','ru','gu',  'ham','-','-']),
       L(['R','.','.',  '-N','.','-P',  'S','.','G',  'R','.','.'],
         ['bhak','-','-',  'thA','-','ni',  'pO','-','sha',  'kam','-','-']),
       L(['R','G','R',  '-N','.','-P',  'S','.','G',  'R','.','.'],
