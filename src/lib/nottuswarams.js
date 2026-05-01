@@ -362,18 +362,20 @@ const mucukundaVarada = {
   sections: [
     { label: 'Geetham', lines: [
       // Line 1 — muchukunda varada thyāgarāja sundaratara
-      // SR | G,,G | GRG | P,MM,G | R,RRRR  — all madhya, R₁ on the tail.
-      L(['S','R',  'G','.','.','G',  'G','R','G',  'P','.','M','M','.','G',  'R1','.','R1','R1','R1','R1'],
-        ['mu','chu',  'kun','-','-','da',  'va','ra','da',  'thyā','-','ga','rā','-','ja',  'sun','-','da','ra','ta','ra']),
+      // SRG,G | GRG | P,MM,G | R,RRRR — all madhya, R₁ only on the 4th R
+      // of the closing tail; the other four R's are the standard R₂.
+      L(['S','R','G','.','G',  'G','R','G',  'P','.','M','M','.','G',  'R','.','R','R','R1','R'],
+        ['mu','chu','kun','-','da',  'va','ra','da',  'thyā','-','ga','rā','-','ja',  'sun','-','da','ra','ta','ra']),
       // Line 2 — pādāra vindasarasa mandahāsa vadanajayavibhō
-      // M,,G,R | S,SSNS | G,RR,S | NDNPDNS — N in "S S N S" dips to mandara
-      // (-N) for the half-step under S; the closing arpeggio is mandara
-      // -D -N -P -D -N resolving to madhya S.
-      L(['M','.','.','G','.','R',  'S','.','S','S','-N','S',  'G','.','R','R','.','S',  '-N','-D','-N','-P','-D','-N','S'],
-        ['pā','-','-','dā','-','ra',  'vin','-','da','sa','ra','sa',  'man','-','da','hā','-','sa',  'va','da','na','ja','ya','vi','bhō']),
+      // M,,G,R | S,SSNS | G,RR,S | NDNP N S,,,,, — N in "S S N S" dips
+      // to mandara (-N) under S; closing mandara descent -N -D -N -P -N
+      // resolves to madhya S held for 5 cells (vibhō sustained).
+      L(['M','.','.','G','.','R',  'S','.','S','S','-N','S',  'G','.','R','R','.','S',  '-N','-D','-N','-P','-N','S','.','.','.','.','.'],
+        ['pā','-','-','dā','-','ra',  'vin','-','da','sa','ra','sa',  'man','-','da','hā','-','sa',  'va','da','na','ja','ya','vi','bhō','-','-','-','-']),
       // Line 3 — mukunda pūji tāṁgadhavala sundaratara
-      // GP,G | P,G | D,P PMG | R,RRRR — peaks on madhya P/D, R₁ tail.
-      L(['G','P','.','G',  'P','.','G',  'D','.','P','P','M','G',  'R1','.','R1','R1','R1','R1'],
+      // GP,G | P,G | D,P PMG | R,RRRR — peaks on madhya P/D, R₁ only on
+      // the 4th R of the closing tail; others R₂.
+      L(['G','P','.','G',  'P','.','G',  'D','.','P','P','M','G',  'R','.','R','R','R1','R'],
         ['mu','kun','-','da',  'pū','-','ji',  'tāṁ','-','ga','dha','va','la',  'sun','-','da','ra','ta','ra']),
       // Line 4 — nandīśa nandita sura bṛndavandita guruguha-guro
       // M,,G,R | S,SS | NS | G,RR,S N | DNPDNS — same melodic plan as
