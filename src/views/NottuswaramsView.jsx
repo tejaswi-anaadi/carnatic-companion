@@ -21,7 +21,12 @@ function freqForCell(cell, baseHz) {
   return semitoneToFreq(semi, baseHz)
 }
 
-function buildSchedule(allCells, baseHz, slotMs) {
+// Build the playback schedule. If `repeatFirstLines` is set, append a
+// second pass over the cells of the first N visible lines after the
+// main pass — those repeat events reuse their ORIGINAL gIdx so the
+// notation grid lights up the same cells the second time around (the
+// grid itself is rendered once, not duplicated).
+function buildSchedule(allCells, baseHz, slotMs, repeatFirstLines = 0, lineOffsets = []) {
   const events = []
   const cellToGroup = []
   let current = null
@@ -42,6 +47,26 @@ function buildSchedule(allCells, baseHz, slotMs) {
     current = ev
     cellToGroup.push(gIdx)
   })
+
+  if (repeatFirstLines > 0) {
+    const repeatEnd = repeatFirstLines >= lineOffsets.length
+      ? allCells.length
+      : lineOffsets[repeatFirstLines]
+    current = null
+    for (let i = 0; i < repeatEnd; i++) {
+      const cell = allCells[i]
+      if (cell.kaarvai) {
+        if (current) current.durMs += slotMs
+        continue
+      }
+      const freq = freqForCell(cell, baseHz)
+      const origGroup = cellToGroup[i]   // reuse original group for visual highlight
+      const ev = { gIdx: origGroup, freq, durMs: slotMs, firstCellIdx: i, swara: cell.sw, oct: cell.oct ?? 0 }
+      events.push(ev)
+      current = ev
+    }
+  }
+
   return { events, cellToGroup }
 }
 
@@ -339,12 +364,15 @@ export default function NottuswaramsView() {
   const slotMs = useMemo(() => {
     const beatMs = 60_000 / BASE_BPM
     const speedMult = SPEEDS.find((s) => s.id === speed)?.mult ?? 1
-    return beatMs * speedMult
+    // Nottuswarams are notated at 2 swaras per beat — each visible cell
+    // lasts a half-akshara at base tempo, not a full akshara like in
+    // Geethams. So slotMs is half a beat, then scaled by speed.
+    return (beatMs / 2) * speedMult
   }, [speed])
 
   const { events, cellToGroup } = useMemo(
-    () => buildSchedule(allCells, shruti.hz, slotMs),
-    [allCells, shruti.hz, slotMs],
+    () => buildSchedule(allCells, shruti.hz, slotMs, item.repeatFirstLines ?? 0, lineOffsets),
+    [allCells, shruti.hz, slotMs, item, lineOffsets],
   )
 
   // Stop playback on any selection / config change.
@@ -542,11 +570,17 @@ export default function NottuswaramsView() {
             <div className="space-y-5 overflow-x-auto pb-1">
               {item.sections.map((sec, secIdx) => {
                 const startingLineIdx = sectionStartLines[secIdx]
+                // Hide the bare "Geetham" header for nottuswarams — these
+                // aren't geethams and the label is redundant. Real section
+                // labels (Pallavi / Anupallavi / Charanam) still render.
+                const showLabel = sec.label && sec.label !== 'Geetham'
                 return (
                   <div key={secIdx}>
-                    <div className="text-xs uppercase tracking-[0.18em] text-saffron font-semibold mb-2">
-                      {sec.label}
-                    </div>
+                    {showLabel && (
+                      <div className="text-xs uppercase tracking-[0.18em] text-saffron font-semibold mb-2">
+                        {sec.label}
+                      </div>
+                    )}
                     <div className="space-y-2.5">
                       {sec.lines.map((ln, lnIdx) => {
                         const lineIdxInFlat = startingLineIdx + lnIdx
@@ -569,9 +603,9 @@ export default function NottuswaramsView() {
               })}
             </div>
 
-            {item.refrain && (
+            {item.repeatFirstLines > 0 && (
               <div className="text-xs text-saffron font-semibold italic">
-                ↻ {item.refrain}
+                ↻ Repeat first {item.repeatFirstLines} lines (played automatically)
               </div>
             )}
 

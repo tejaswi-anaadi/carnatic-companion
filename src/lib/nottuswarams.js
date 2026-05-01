@@ -97,7 +97,7 @@ const syamale = {
         ['lak','-','-','-',  'shmi','-','vi','nu',  'te','-','-','-',  'sAm','-','bha','vi']),
     ]},
   ],
-  refrain: 'Repeat first 4 lines',
+  repeatFirstLines: 4,
 }
 
 // =========================================================================
@@ -187,7 +187,7 @@ const sakthi = {
         ['rak','tha','pa',  'dAm','bu','jam',  'bhA','va','yA',  'Mi','-','-']),
     ]},
   ],
-  refrain: 'Repeat first 4 lines',
+  repeatFirstLines: 4,
 }
 
 // =========================================================================
@@ -226,7 +226,7 @@ const varaSivaBalam = {
         ['Sub','-','rah','-',  'man','-','yam','-',  'Su','ra','vi','nu',  'tham','-','-','-']),
     ]},
   ],
-  refrain: 'Repeat first 3 lines',
+  repeatFirstLines: 3,
 }
 
 // =========================================================================
@@ -269,7 +269,7 @@ const ramaJanardhana = {
         ['san','nu','tha',  'sree','rA','ma',  'chan','dra','pra',  'bhO','-','-']),
     ]},
   ],
-  refrain: 'Repeat first 4 lines',
+  repeatFirstLines: 4,
 }
 
 // =========================================================================
