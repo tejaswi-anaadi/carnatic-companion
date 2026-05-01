@@ -329,16 +329,17 @@ const vandeMeenakshi = {
 // =========================================================================
 // 7. Mucukunda Varada  (Tisram)
 // =========================================================================
-// Tisra-jathi tala. **Anya-swara**: this composition is famous for using
-// shuddha rishabham (R₁) — NOT the standard chathushruthi R₂ of
-// Sankarabharanam — in the descending "RRRRR" phrases that close lines 1
-// and 3 ("sundara-kara" and "sundara-tara"). Per the source PDF and the
-// user's correction, those five r's are encoded directly as "R1" so they
-// bypass the raga's letter map and sound the shuddha pitch.
+// Re-transcribed from the user's hand-written notation. **Anya-swara**:
+// shuddha rishabham (R₁), NOT the standard chathushruthi R₂ of
+// Sankarabharanam, in the descending "RRRRR" tails of lines 1 and 3
+// ("sundaratara"). Encoded directly as "R1" to bypass the raga letter
+// map.
 //
-// Notation source: scanned page 5 (Samskriti Foundation), transcribed
-// approximately — gamaka markings (shake, slide) shown in the PDF have
-// been preserved as plain notes; a future pass can encode them.
+// Octave assignment: lines 1 and 3 stay in madhya stayi (S → P range)
+// with the R₁ tail; lines 2 and 4 share the same melodic shape — they
+// open in madhya, dip briefly to mandara N for the half-step descent
+// below S, ascend back to madhya G/R/S, and close on a mandara
+// arpeggio (-D -N -P -D -N) that resolves to madhya S.
 const mucukundaVarada = {
   id: 'mucukunda',
   title: 'Mucukunda Varada',
@@ -347,34 +348,39 @@ const mucukundaVarada = {
   language: 'Sanskrit',
   ragam: SANKARABHARANAM,
   talam: { name: 'Tisram', jathi: 'Tisra', aksharas: 3 },
-  cellsPerAvarta: 18,
-  barsAt: [4, 9, 13],
-  bigBarsAt: [18],
+  cellsPerAvarta: 6,
+  barsAt: [],
+  bigBarsAt: [6, 12, 18, 24],
   meaning:
     'Boon-giver to Mucukunda — the king who slept in a cave for an age and was awakened by ' +
     'Krishna to incinerate Kalayavana with a glance. Salutations to Tyaga-raja, lovely-handed, ' +
     'lotus-faced, lord whose smile (manda-hāsa) gladdens the worlds — to Brahma-worshipped ' +
     'Guruguha, the auspicious one.',
   notes:
-    'Uses shuddha rishabham (R₁) as anya-swara in the closing "sundara-kara" / "sundara-tara" ' +
-    'phrases — a distinctive feature of this composition.',
+    'Uses shuddha rishabham (R₁) as anya-swara in the closing "sundaratara" phrases of ' +
+    'lines 1 and 3 — a distinctive feature of this composition.',
   sections: [
     { label: 'Geetham', lines: [
-      // Row 1 — eduppu (4 cells: rest, rest, mandara S, R) then main (5+4+5).
-      L(['.','.','-S','R',   'G','G','G','R','G',   'P','M','M','G',   'R1','R1','R1','R1','R1'],
-        ['-','-','mu','cu',  'kuṁ','da','va','ra','da',  'tyā','ga','rā','ja',  'suṁ','da','ra','ka','ra']),
-      // Row 2 — pā-dā-ra | viṁ-da-sa-ra-sa | maṁ-da-hā-sa | va-da-na-ja-ya-vi
-      L(['M','G','R',   '-S','S','S','-N','S',   'G','R','R','S',   '-N','-D','-P','-P','-D','-N'],
-        ['pā','dā','ra',  'viṁ','da','sa','ra','sa',  'maṁ','da','hā','sa',  'va','da','na','ja','ya','vi']),
-      // Row 3 (Charanam) — sustained S+pickup g | kuṁda-pūji | tāṁ-ga-dha-va-ḷa | sundara-tara (R₁×5)
-      L(['S','.','.','G',   'P','G','P','G',   'D','-P','M','G','P',   'R1','R1','R1','R1','R1'],
-        ['bhō','-','-','mu',  'kuṁ','da','pū','ji',  'tāṁ','ga','dha','va','ḷa',  'suṁ','da','ra','ta','ra']),
-      // Row 4 — mirrors row 2 melodically with the closing "guruguha" sahitya.
-      L(['M','G','R',   '-S','S','S','-N','S',   'G','R','R','S',   '-N','-D','-P','-P','-D','-N'],
-        ['naṁ','dī','śa',  'naṁ','di','ta','su','ra',  'bṛṁ','da','vaṁ','di',  'ta','gu','ru','gu','ha','gu']),
-      // Row 5 — final sustain on S.
-      L(['S','.','.','.'],
-        ['rō','-','-','-']),
+      // Line 1 — muchukunda varada thyāgarāja sundaratara
+      // SR | G,,G | GRG | P,MM,G | R,RRRR  — all madhya, R₁ on the tail.
+      L(['S','R',  'G','.','.','G',  'G','R','G',  'P','.','M','M','.','G',  'R1','.','R1','R1','R1','R1'],
+        ['mu','chu',  'kun','-','-','da',  'va','ra','da',  'thyā','-','ga','rā','-','ja',  'sun','-','da','ra','ta','ra']),
+      // Line 2 — pādāra vindasarasa mandahāsa vadanajayavibhō
+      // M,,G,R | S,SSNS | G,RR,S | NDNPDNS — N in "S S N S" dips to mandara
+      // (-N) for the half-step under S; the closing arpeggio is mandara
+      // -D -N -P -D -N resolving to madhya S.
+      L(['M','.','.','G','.','R',  'S','.','S','S','-N','S',  'G','.','R','R','.','S',  '-N','-D','-N','-P','-D','-N','S'],
+        ['pā','-','-','dā','-','ra',  'vin','-','da','sa','ra','sa',  'man','-','da','hā','-','sa',  'va','da','na','ja','ya','vi','bhō']),
+      // Line 3 — mukunda pūji tāṁgadhavala sundaratara
+      // GP,G | P,G | D,P PMG | R,RRRR — peaks on madhya P/D, R₁ tail.
+      L(['G','P','.','G',  'P','.','G',  'D','.','P','P','M','G',  'R1','.','R1','R1','R1','R1'],
+        ['mu','kun','-','da',  'pū','-','ji',  'tāṁ','-','ga','dha','va','la',  'sun','-','da','ra','ta','ra']),
+      // Line 4 — nandīśa nandita sura bṛndavandita guruguha-guro
+      // M,,G,R | S,SS | NS | G,RR,S N | DNPDNS — same melodic plan as
+      // line 2: madhya open, brief mandara dip (-N) below S, madhya
+      // middle, mandara guruguha descent resolving to madhya S.
+      L(['M','.','.','G','.','R',  'S','.','S','S',  '-N','S',  'G','.','R','R','.','S','-N',  '-D','-N','-P','-D','-N','S'],
+        ['nan','-','-','dī','-','śa',  'nan','-','di','ta',  'su','ra',  'bṛn','-','da','van','-','di','ta',  'gu','ru','gu','ha','gu','rō']),
     ]},
   ],
 }
