@@ -223,12 +223,22 @@ const kundaGowra = {
         ['He','ma','ku','-','-','ta', 'sim','-','ha','-','sa','na'], _malahari),
       L(['D','+R','+R','+S','D','P',  'D','P','M','G','R','S'],
         ['Vi','ru','pa','ra','-','ksha', 'ka','ru','na','-','ka','ra'], _malahari),
+      // (Man) — return to the Anupallavi pair before continuing.
+      L(['S','.','R','.','R','.',  'D','P','M','G','R','S'],
+        ['Man','-','da','-','ra','-', 'ku','su','ma','-','ka','ra'], _malahari),
+      L(['S','R','M','.','G','R',  'S','R','G','R','S','.'],
+        ['Ma','ka','ran','-','dam','-', 'va','-','si','thu','va','-'], _malahari),
     ]},
     { label: 'Charanam 2', lines: [
       L(['D','P','M','G','R','S',  'R','M','P','D','M','P'],
         ['Chan','da','ma','-','-','ma', 'man','-','da','-','gi','ni'], _malahari),
       L(['D','+R','+R','+S','D','P',  'D','P','M','G','R','S'],
         ['Man','-','di','ra','-','ya', 'ma','-','na','ma','ku','ta'], _malahari),
+      // (Man) — same Anupallavi return as Charanam 1.
+      L(['S','.','R','.','R','.',  'D','P','M','G','R','S'],
+        ['Man','-','da','-','ra','-', 'ku','su','ma','-','ka','ra'], _malahari),
+      L(['S','R','M','.','G','R',  'S','R','G','R','S','.'],
+        ['Ma','ka','ran','-','dam','-', 'va','-','si','thu','va','-'], _malahari),
     ]},
   ],
 }
