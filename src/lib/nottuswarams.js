@@ -388,6 +388,10 @@ const mucukundaVarada = {
 // dotted-below letters (ṇ, ḍ) are mandara stayi and encoded with the "-"
 // prefix. Cell counts vary per row — bars show at the four PDF cell
 // boundaries where they line up.
+// Notation re-transcribed from the user's authoritative scan: 11 lines of
+// 16 cells each (1 avarta of Adi at 2 cells per beat). The visible PDF
+// rows pair up two avartas side-by-side; each col becomes one line here.
+// Pallavi (4) + Anupallavi (3) + Charanam (4) = 11 lines.
 const kamalasanaVandita = {
   id: 'kamalasana',
   title: 'Kamalasana Vandita',
@@ -396,52 +400,54 @@ const kamalasanaVandita = {
   language: 'Sanskrit',
   ragam: SANKARABHARANAM,
   talam: { name: 'Adi', jathi: 'Chathurasra', aksharas: 8 },
-  cellsPerAvarta: 14,
-  barsAt: [3, 6, 10],
-  bigBarsAt: [14],
+  cellsPerAvarta: 16,
+  barsAt: [],
+  bigBarsAt: [16],
   meaning:
     'Salutation to her at whose lotus feet Brahma (the lotus-seated, kamalAsana) bows — ' +
     'mother of Guruguha, dwelling in the heart of Vishnu (kamalA-pati), goddess of speech ' +
     '(vAgdEvi), Kamakshi, Kalyani, consort of Kameshvara.',
   sections: [
     { label: 'Pallavi', lines: [
-      // Row 1: G g m | R r g | S . S . | S . R G  (kamalAsana vandita padAbjE)
-      L(['G','G','M',   'R','R','G',   'S','.','S','.',   'S','.','R','G'],
-        ['ka','ma','lA',  'sa','na','van',  'di','-','ta','-',  'pa','-','dA','bjE']),
-      // Row 2: M m p | G g m | R . R . | R . P M  (kamaneeya karOdaya sAmrAjyE)
-      L(['M','M','P',   'G','G','M',   'R','.','R','.',   'R','.','P','M'],
-        ['ka','ma','nee',  'ya','ka','rO',  'da','-','ya','-',  'sA','-','mrAj','yE']),
-      // Row 3: same melody as Row 1 (kamalA nagarE sakalA dhArE)
-      L(['G','G','M',   'R','R','G',   'S','.','S','.',   'S','.','R','G'],
-        ['ka','ma','lA',  'na','ga','rE',  'sa','-','ka','-',  'lA','-','dhA','rE']),
-      // Row 4: m g r s | -N s r g | S . S . | S . P M  (kamala nayana dhruta jagadA dhArE)
-      L(['M','G','R','S',   '-N','S','R','G',   'S','.','S','.',   'S','.','P','M'],
-        ['ka','ma','la','na',  'ya','na','dhru','ta',  'ja','-','ga','-',  'dA','-','dhA','rE']),
+      // Line 1 — kamalāsana vandita padābjē
+      L(['P','M','G','.',  'G','M','R','.',  'R','G','S','.',  'S','.','S','.'],
+        ['ka','ma','lā','-',  'sa','na','van','-',  'di','ta','pā','-',  'dāb','-','jē','-']),
+      // Line 2 — kamanīya karōdaya sāmrājyē
+      L(['R','G','M','.',  'M','P','G','.',  'G','M','R','.',  'R','.','R','.'],
+        ['ka','ma','nī','-',  'ya','ka','rō','-',  'da','ya','sām','-',  'rāj','-','yē','-']),
+      // Line 3 — kamalā nagarē sakalā kārē
+      L(['P','M','G','.',  'G','M','R','.',  'R','G','S','.',  'S','.','S','.'],
+        ['ka','ma','lā','-',  'na','ga','rē','-',  'sa','ka','lā','-',  'kā','-','rē','-']),
+      // Line 4 — kamala nayana dhruta jagadā dhārē
+      L(['R','G','M','G',  'R','S','N','S',  'R','G','S','.',  'S','.','S','.'],
+        ['ka','ma','la','na',  'ya','na','dhr','ta',  'ja','ga','dā','-',  'dhā','-','rē','-']),
     ]},
     { label: 'Anupallavi', lines: [
-      // Row 5: G s -N | D D P | P M G M | R . P M  (kamalE vimalE guruguha janani)
-      L(['G','S','-N',   'D','D','P',   'P','M','G','M',   'R','.','P','M'],
-        ['ka','ma','lE',  'vi','ma','lE',  'gu','ru','gu','ha',  'ja','-','na','ni']),
-      // Row 6: G s -N | -D -P M G | R R | R . P M  (kamalA pati nuta hrudayE mAyE)
-      L(['G','S','-N',   '-D','-P','M','G',   'R','R',   'R','.','P','M'],
-        ['ka','ma','lA',  'pa','ti','nu','ta',  'hru','da',  'yE','-','mA','yE']),
-      // Row 7: G P M G | R M G R | S . S . | S . G M  (kamala sashi vijaya vadanE mEyE)
-      L(['G','P','M','G',   'R','M','G','R',   'S','.','S','.',   'S','.','G','M'],
-        ['ka','ma','la','sa',  'shi','vi','ja','ya',  'va','-','da','-',  'nE','-','mE','yE']),
+      // Line 5 — kamalē vimalē guruguha janani
+      // (Source PDF has "P M M G" struck out and "D P P M" written above
+      // for cells 9–12; we apply the corrected D P P M phrase.)
+      L(['P','M','G','.',  '+S','N','D','.',  'D','P','P','M',  'G','M','R','.'],
+        ['ka','ma','lē','-',  'vi','ma','lē','-',  'gu','ru','gu','ha',  'ja','na','nī','-']),
+      // Line 6 — kamalā pati nuta hrudayē māyē
+      L(['P','M','G','.',  '+S','N','D','P',  'M','G','M','R',  'R','.','R','.'],
+        ['ka','ma','lā','-',  'pa','ti','nu','ta',  'hr','da','yē','-',  'mā','-','yē','-']),
+      // Line 7 — kamala saśi vijaya vadanē mēyē
+      L(['P','M','G','P',  'M','G','R','M',  'G','R','S','.',  'S','.','S','.'],
+        ['ka','ma','la','śa',  'śi','vi','ja','ya',  'va','da','nē','-',  'mē','-','yē','-']),
     ]},
     { label: 'Charanam', lines: [
-      // Row 8: P . P . | P . +S . | P . P . | P . S P  (kamalEndrAni vAgdEvi sri)
-      L(['P','.','P','.',   'P','.','+S','.',   'P','.','P','.',   'P','.','S','P'],
-        ['ka','-','ma','-',  'lE','-','ndrA','-',  'ni','-','vAg','-',  'dE','-','vi','sri']),
-      // Row 9: P D P | M G M | R . R . | . . G M  (gouri poojithE hrudayA nandE)
-      L(['P','D','P',   'M','G','M',   'R','.','R','.',   '.','.','G','M'],
-        ['gou','ri','poo',  'ji','thE','hru',  'da','-','yA','-',  '-','-','nan','dE']),
-      // Row 10: same as Row 8 (kamalAkshi pAhi kAmAkshi)
-      L(['P','.','P','.',   'P','.','+S','.',   'P','.','P','.',   'P','.','S','P'],
-        ['ka','-','ma','-',  'lA','-','kshi','-',  'pA','-','hi','-',  'kA','-','mA','kshi']),
-      // Row 11: G M P M | G R G R | S N | S . .  (kAmEshvara vara sati kalyAni)
-      L(['G','M','P','M',   'G','R','G','R',   'S','N',   'S','.','.'],
-        ['kA','mE','shva','ra',  'va','ra','sa','ti',  'kal','yA',  'ni','-','-']),
+      // Line 8 — kamalēndrāṇī vāgdēvī śrī
+      L(['G','M','P','.',  'P','.','P','.',  '+S','.','P','.',  'P','.','P','.'],
+        ['ka','ma','lēn','-',  'drā','-','ṇī','-',  'vāg','-','dē','-',  'vī','-','śrī','-']),
+      // Line 9 — gourī pūjitē hrudayā nandē
+      L(['+S','.','P','.',  'P','.','D','P',  'M','G','M','R',  'R','.','R','.'],
+        ['gau','-','rī','-',  'pū','-','ji','ta',  'hr','da','yā','-',  'nan','-','dē','-']),
+      // Line 10 — kamalākṣi pāhi kāmākṣi
+      L(['G','M','P','.',  'P','.','P','.',  '+S','.','P','.',  'P','.','P','.'],
+        ['ka','ma','lā','-',  'kṣi','-','pā','-',  'hi','-','kā','-',  'mā','-','kṣi','-']),
+      // Line 11 — kāmēśvara vara sati kalyāṇi
+      L(['+S','.','P','.',  'G','M','P','M',  'G','R','S','.',  'S','.','S','.'],
+        ['kā','-','mēś','-',  'va','ra','va','ra',  'sa','ti','kal','-',  'yā','-','ṇi','-']),
     ]},
   ],
 }
