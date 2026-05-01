@@ -378,11 +378,11 @@ const mucukundaVarada = {
       L(['G','P','.','G',  'P','.','G',  'D','.','P','P','M','G',  'R','.','R','R','R1','R'],
         ['mu','kun','-','da',  'pū','-','ji',  'tāṁ','-','ga','dha','va','la',  'sun','-','da','ra','ta','ra']),
       // Line 4 — nandīśa nandita sura bṛndavandita guruguha-guro
-      // M,,G,R | S,SS | NS | G,RR,S N | DNPDNS — same melodic plan as
-      // line 2: madhya open, brief mandara dip (-N) below S, madhya
-      // middle, mandara guruguha descent resolving to madhya S.
-      L(['M','.','.','G','.','R',  'S','.','S','S',  '-N','S',  'G','.','R','R','.','S','-N',  '-D','-N','-P','-D','-N','S'],
-        ['nan','-','-','dī','-','śa',  'nan','-','di','ta',  'su','ra',  'bṛn','-','da','van','-','di','ta',  'gu','ru','gu','ha','gu','rō']),
+      // M,,G,R | S,SS | NS | G,RR,S N | DNPDNS,,,,, — same melodic plan
+      // as line 2; the closing madhya S is held over 5 trailing kaarvais
+      // (matching line 2's "bhō" sustain).
+      L(['M','.','.','G','.','R',  'S','.','S','S',  '-N','S',  'G','.','R','R','.','S','-N',  '-D','-N','-P','-D','-N','S','.','.','.','.','.'],
+        ['nan','-','-','dī','-','śa',  'nan','-','di','ta',  'su','ra',  'bṛn','-','da','van','-','di','ta',  'gu','ru','gu','ha','gu','rō','-','-','-','-','-']),
     ]},
   ],
 }
