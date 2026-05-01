@@ -50,6 +50,26 @@ function getOrCreateCtx() {
   return CTX
 }
 
+// Defensive: tear-down + rebuild MASTER → destination. Safari especially
+// can drop the master gain's connection to destination after the page
+// goes to bg/fg or after long idle, leaving us scheduling oscillators
+// into a sink that goes nowhere — symptom: "no sound, anywhere".
+// Calling disconnect() on an already-disconnected node is a no-op (it
+// throws InvalidAccessError, which we swallow). Re-connecting is cheap
+// and makes the graph deterministic at every play.
+function ensureMasterConnected(ctx) {
+  if (!MASTER) return
+  try { MASTER.disconnect(ctx.destination) } catch (_e) { /* not connected */ }
+  try { MASTER.connect(ctx.destination) } catch (_e) { /* already connected somehow */ }
+  // Also guarantee gain isn't stuck at 0 from a stale envelope on the
+  // master itself (we don't normally ramp MASTER, but being explicit).
+  try {
+    const now = ctx.currentTime
+    MASTER.gain.cancelScheduledValues(now)
+    MASTER.gain.setValueAtTime(0.95, now)
+  } catch (_e) { /* ignore */ }
+}
+
 async function ensureRunning() {
   const ctx = getOrCreateCtx()
   if (ctx.state !== 'running') {
@@ -59,6 +79,7 @@ async function ensureRunning() {
       console.warn('[audio] resume() failed:', e?.message ?? e)
     }
   }
+  ensureMasterConnected(ctx)
   return ctx
 }
 
