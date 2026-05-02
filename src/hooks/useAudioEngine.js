@@ -17,6 +17,11 @@ import { SWARA_SEMITONE, semitoneToFreq } from '../lib/swaras.js'
 // the tab returns to the foreground.
 // ---------------------------------------------------------------------------
 
+// Per-note volume for swara playback (playSequence / playNotes /
+// playFrequencies). Bumped from 0.32 → 0.45 (~+3 dB) after user feedback
+// that the previous level felt too quiet on laptop speakers.
+const SWARA_VOL = 0.45
+
 let CTX = null
 let MASTER = null
 let ACTIVE_CANCEL = null
@@ -254,7 +259,7 @@ export function useAudioEngine() {
           freqs.forEach((freq, i) => {
             if (!Number.isFinite(freq) || freq <= 0) return
             const at = startCtxTime + i * noteSec
-            scheduleTone(at, freq, sustain, 'triangle', 0.32)
+            scheduleTone(at, freq, sustain, 'triangle', SWARA_VOL)
             const delayMs = (at - ctx.currentTime) * 1000
             session.timers.push(setTimeout(() => {
               if (!session.isCancelled() && onNoteStart) onNoteStart(freq, i)
@@ -283,7 +288,7 @@ export function useAudioEngine() {
             const durSec = n.durMs / 1000
             const sustain = Math.max(0.02, Math.min(durSec * 0.94, durSec - 0.012))
             if (Number.isFinite(n.freq) && n.freq > 0) {
-              scheduleTone(at, n.freq, sustain, 'triangle', 0.32)
+              scheduleTone(at, n.freq, sustain, 'triangle', SWARA_VOL)
             }
             const delayMs = (at - ctx.currentTime) * 1000
             session.timers.push(setTimeout(() => {
@@ -312,7 +317,7 @@ export function useAudioEngine() {
           swaras.forEach((sw, i) => {
             const semi = SWARA_SEMITONE[sw] ?? 0
             const at = startCtxTime + i * noteSec
-            scheduleTone(at, semitoneToFreq(semi), noteSec * 0.92, 'triangle', 0.32)
+            scheduleTone(at, semitoneToFreq(semi), noteSec * 0.92, 'triangle', SWARA_VOL)
             const delayMs = (at - ctx.currentTime) * 1000
             session.timers.push(setTimeout(() => {
               if (!session.isCancelled() && onNoteStart) onNoteStart(sw, i)
