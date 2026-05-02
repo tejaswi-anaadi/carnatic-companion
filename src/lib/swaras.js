@@ -20,7 +20,9 @@ export const SWARA_LABEL = {
   N1: 'Ni₁', N2: 'Ni₂', N3: 'Ni₃',
 }
 
-// Returns a frequency (Hz) for a semitone offset above middle C (~261.63 Hz).
-export function semitoneToFreq(semi, baseFreq = 261.63) {
+// Returns a frequency (Hz) for a semitone offset above Sa.
+// Sa is anchored at E3 (~164.81 Hz) — the warm lower-register that matches a
+// veena/violin player's natural Sa, not Western middle-C.
+export function semitoneToFreq(semi, baseFreq = 164.8138) {
   return baseFreq * Math.pow(2, semi / 12)
 }
