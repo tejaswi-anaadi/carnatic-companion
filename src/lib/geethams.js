@@ -369,7 +369,7 @@ const varaVeena = {
     "Ranganaayaki, granter of all desires, mother of Brahma the lotus-seated. Victory!",
   sections: [
     { label: 'Geetham', lines: [
-      L(['G','G','P','.','P','.',  'P','D','+S','.','+S','.'],
+      L(['G','G','P','.','P','.',  'D','P','+S','.','+S','.'],
         ['Va','ra','vee','-','na','-', 'Mru','du','Pa','-','ni','-'], _mohanam),
       L(['+R','+S','D','D','P','.',  'D','P','G','G','R','.'],
         ['Va','na','ru','ha','Lo','-', 'cha','na','Raa','-','ni','-'], _mohanam),
