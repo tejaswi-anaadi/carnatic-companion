@@ -9,7 +9,12 @@ import { flattenTalaBeats } from '../lib/talas.js'
 //   tala: a tala object (or null when stopped)
 //   nadai: subdivisions per beat (3,4,5,7,9)
 //   bpm: main beats per minute
-export function useMetronome({ audio, tala, nadai, bpm }) {
+// `voice` selects the tala-stroke timbre:
+//   'beep'   — original square/sine click-tone (default for back-compat)
+//   'kattai' — wooden block (Bharatanatyam clappers): main = loud/strong,
+//              other beats inside the anga = lower & softer, sub-pulses silent
+//   'jalra'  — small hand cymbals: bell-like sustain, same role hierarchy
+export function useMetronome({ audio, tala, nadai, bpm, voice = 'beep' }) {
   const [isRunning, setIsRunning] = useState(false)
   const [pos, setPos] = useState({ beatIdx: 0, subIdx: 0 })
 
@@ -98,10 +103,22 @@ export function useMetronome({ audio, tala, nadai, bpm }) {
       while (nextNoteTimeRef.current < sec + lookahead) {
         const { beatIdx, subIdx } = counterRef.current
         const beat = beatsRef.current[beatIdx]
-        const handle = subIdx === 0
-          ? audio.scheduleClick(nextNoteTimeRef.current, beat.action)
-          : audio.scheduleClick(nextNoteTimeRef.current, 'sub')
-        if (handle) sourcesRef.current.push(handle)
+        // 'clap' is the start-of-anga stroke (samam at beat 0, plus the
+        // start of every later anga); everything else inside an anga
+        // (wave / finger-N) is a softer "sub-main" stroke; everything
+        // between beats is a quiet "sub" tick.
+        const role =
+          subIdx === 0 ? (beat.action === 'clap' ? 'main' : 'sub-main') : 'sub'
+        if (voice === 'kattai') {
+          sourcesRef.current.push(...audio.scheduleKattai(nextNoteTimeRef.current, role))
+        } else if (voice === 'jalra') {
+          sourcesRef.current.push(...audio.scheduleJalra(nextNoteTimeRef.current, role))
+        } else {
+          const handle = subIdx === 0
+            ? audio.scheduleClick(nextNoteTimeRef.current, beat.action)
+            : audio.scheduleClick(nextNoteTimeRef.current, 'sub')
+          if (handle) sourcesRef.current.push(handle)
+        }
         // Update visible state — slightly delayed to align with audio.
         const visualDelay = Math.max(0, (nextNoteTimeRef.current - ctx.currentTime) * 1000)
         const snapshot = { beatIdx, subIdx }
@@ -125,7 +142,7 @@ export function useMetronome({ audio, tala, nadai, bpm }) {
       if (intervalRef.current) clearInterval(intervalRef.current)
       intervalRef.current = null
     }
-  }, [isRunning, audio, bpm, nadai])
+  }, [isRunning, audio, bpm, nadai, voice])
 
   // If tala/nadai/bpm change while running, restart cleanly.
   useEffect(() => {

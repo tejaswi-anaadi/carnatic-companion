@@ -7,15 +7,22 @@ import { useAudioEngine } from '../hooks/useAudioEngine.js'
 import { useMetronome } from '../hooks/useMetronome.js'
 import { useT } from '../lib/i18n.jsx'
 
+const VOICE_OPTIONS = [
+  { id: 'kattai', label: 'Kattai',  hint: 'wooden block' },
+  { id: 'jalra',  label: 'Jalra',   hint: 'hand cymbals' },
+  { id: 'beep',   label: 'Click',   hint: 'electronic'   },
+]
+
 export default function TalasView() {
   const [family, setFamily] = useState(FAMILIES[4]) // Triputa
   const [jathi, setJathi] = useState(JATHIS[1])     // Chatusra
   const [nadai, setNadai] = useState(NADAIS[1])     // Chatusra
   const [bpm, setBpm] = useState(72)
+  const [voice, setVoice] = useState('kattai')
 
   const tala = useMemo(() => buildTala(family, jathi), [family, jathi])
   const audio = useAudioEngine()
-  const { isRunning, pos, start, stop } = useMetronome({ audio, tala, nadai: nadai.sub, bpm })
+  const { isRunning, pos, start, stop } = useMetronome({ audio, tala, nadai: nadai.sub, bpm, voice })
   const t = useT()
   const isSa = t.lang === 'sa'
 
@@ -50,18 +57,41 @@ export default function TalasView() {
                 Template: {tala.template.join(' ')} · Beats: {tala.angas.map((a) => a.beats).join(' + ')} = {tala.totalBeats}
               </div>
             </div>
-            <button
-              onClick={() => (isRunning ? stop() : start())}
-              className={
-                'flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition ' +
-                (isRunning
-                  ? 'bg-crimson text-cream shadow-temple'
-                  : 'bg-gold text-crimson-dark hover:bg-saffron hover:text-cream shadow-temple')
-              }
-            >
-              {isRunning ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-              {isRunning ? 'Stop Tala' : 'Start Tala'}
-            </button>
+            <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] uppercase tracking-[0.18em] text-saffron">Sound</span>
+                <div className="inline-flex rounded-full border-2 border-gold overflow-hidden bg-cream-dark">
+                  {VOICE_OPTIONS.map((v) => {
+                    const active = v.id === voice
+                    return (
+                      <button
+                        key={v.id}
+                        onClick={() => setVoice(v.id)}
+                        title={v.hint}
+                        className={
+                          'px-3 py-1.5 text-xs font-semibold transition ' +
+                          (active ? 'bg-crimson text-cream' : 'text-crimson hover:bg-gold/30')
+                        }
+                      >
+                        {v.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+              <button
+                onClick={() => (isRunning ? stop() : start())}
+                className={
+                  'flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition ' +
+                  (isRunning
+                    ? 'bg-crimson text-cream shadow-temple'
+                    : 'bg-gold text-crimson-dark hover:bg-saffron hover:text-cream shadow-temple')
+                }
+              >
+                {isRunning ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                {isRunning ? 'Stop Tala' : 'Start Tala'}
+              </button>
+            </div>
           </div>
 
           <TalaVisualizer tala={tala} pos={pos} isRunning={isRunning} nadai={nadai} />

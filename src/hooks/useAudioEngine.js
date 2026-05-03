@@ -25,6 +25,7 @@ const SWARA_VOL = 0.45
 let CTX = null
 let MASTER = null
 let ACTIVE_CANCEL = null
+let NOISE_BUFFER = null
 
 // "Tracker" sink for the currently-active playback session. When a
 // playback method (playSequence/playFrequencies/playNotes) wants to
@@ -103,6 +104,38 @@ if (typeof document !== 'undefined') {
 
 function safeAt(ctx, at) {
   return Math.max(at, ctx.currentTime + 0.005)
+}
+
+// Lazily-built mono white-noise buffer reused by every kattai/jalra hit.
+// 0.5s is plenty — the longest jalra ring is ~0.4s. Rebuild only if the
+// AudioContext got recreated with a different sampleRate (rare).
+function getNoiseBuffer(ctx) {
+  if (NOISE_BUFFER && NOISE_BUFFER.sampleRate === ctx.sampleRate) return NOISE_BUFFER
+  const len = Math.floor(ctx.sampleRate * 0.5)
+  const buf = ctx.createBuffer(1, len, ctx.sampleRate)
+  const data = buf.getChannelData(0)
+  for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1
+  NOISE_BUFFER = buf
+  return buf
+}
+
+// Per-role tonal/dynamic profile for the natural-percussion voices.
+// Carnatic semantics:
+//   main     = samam / start-of-anga clap → loud, full-pitched
+//   sub-main = drutam wave or laghu finger count → softer, lower
+//   sub      = subdivision tick (between beats) — very quiet, brief
+function kattaiProfile(role) {
+  if (role === 'main')     return { mid: 1500, low: 520, vol: 1.00, dur: 0.13 }
+  if (role === 'sub-main') return { mid: 1100, low: 380, vol: 0.55, dur: 0.10 }
+  if (role === 'sub')      return { mid: 1300, low: 440, vol: 0.18, dur: 0.05 }
+  return null
+}
+
+function jalraProfile(role) {
+  if (role === 'main')     return { baseHz: 2400, vol: 0.55, dur: 0.45 }
+  if (role === 'sub-main') return { baseHz: 1700, vol: 0.30, dur: 0.30 }
+  if (role === 'sub')      return { baseHz: 2100, vol: 0.10, dur: 0.10 }
+  return null
 }
 
 // Fade-and-stop a single tracked source. The brief linear ramp avoids the
@@ -209,6 +242,137 @@ export function useAudioEngine() {
     const handle = { osc, gain, scheduledEnd }
     if (ACTIVE_TRACKER) ACTIVE_TRACKER.push(handle)
     return handle
+  }, [])
+
+  // ---- Natural percussion voices --------------------------------------
+  // Each returns an array of {osc, gain, scheduledEnd} handles so callers
+  // can track every node for stop() / killAllSources(). Returns [] for
+  // unsupported roles (e.g. 'sub' on kattai/jalra) so the metronome can
+  // safely skip silently.
+
+  // Kattai = wooden block (Bharatanatyam practice clappers).
+  //
+  // Earlier version used a clean triangle oscillator for the pitched body;
+  // that gave it a synthetic "tonal" quality which the user correctly
+  // identified as electronic-sounding. Real wood blocks have NO clean
+  // sustained pitch — the "tonk" comes from a few damped resonant modes
+  // ringing on top of a broadband impact.
+  //
+  // New synthesis (all noise-based, no oscillators):
+  //   * mid resonance: noise → high-Q bandpass at ~1.5 kHz → main "tonk"
+  //   * low resonance: noise → bandpass at ~520 Hz → wood body warmth
+  //   * attack click:  brief highpass-filtered noise transient (~8 ms)
+  //
+  // Per-hit detune (±3%) of the resonance frequencies so consecutive
+  // strikes don't sound machine-identical — that subtle variation is most
+  // of what reads as "natural".
+  const scheduleKattai = useCallback((at, role = 'main') => {
+    const profile = kattaiProfile(role)
+    if (!profile) return []
+    const ctx = getOrCreateCtx()
+    const t0 = safeAt(ctx, at)
+    const { mid, low, vol, dur } = profile
+    const detune = () => 1 + (Math.random() - 0.5) * 0.06 // ±3%
+    const handles = []
+
+    // Mid-frequency wood mode — the main pitched character of the "tonk"
+    const noiseMid = ctx.createBufferSource()
+    noiseMid.buffer = getNoiseBuffer(ctx)
+    const bpMid = ctx.createBiquadFilter()
+    bpMid.type = 'bandpass'
+    bpMid.frequency.setValueAtTime(mid * detune(), t0)
+    bpMid.Q.value = 11
+    const gMid = ctx.createGain()
+    gMid.gain.setValueAtTime(0, t0)
+    gMid.gain.linearRampToValueAtTime(vol * 0.95, t0 + 0.001)
+    gMid.gain.exponentialRampToValueAtTime(0.0005, t0 + dur)
+    noiseMid.connect(bpMid); bpMid.connect(gMid); gMid.connect(MASTER)
+    const midEnd = t0 + dur + 0.04
+    noiseMid.start(t0); noiseMid.stop(midEnd)
+    handles.push({ osc: noiseMid, gain: gMid, scheduledEnd: midEnd })
+
+    // Low-frequency wood mode — body warmth, decays slightly faster
+    const noiseLow = ctx.createBufferSource()
+    noiseLow.buffer = getNoiseBuffer(ctx)
+    const bpLow = ctx.createBiquadFilter()
+    bpLow.type = 'bandpass'
+    bpLow.frequency.setValueAtTime(low * detune(), t0)
+    bpLow.Q.value = 8
+    const gLow = ctx.createGain()
+    gLow.gain.setValueAtTime(0, t0)
+    gLow.gain.linearRampToValueAtTime(vol * 0.55, t0 + 0.002)
+    gLow.gain.exponentialRampToValueAtTime(0.0005, t0 + dur * 0.85)
+    noiseLow.connect(bpLow); bpLow.connect(gLow); gLow.connect(MASTER)
+    const lowEnd = t0 + dur + 0.04
+    noiseLow.start(t0); noiseLow.stop(lowEnd)
+    handles.push({ osc: noiseLow, gain: gLow, scheduledEnd: lowEnd })
+
+    // Attack transient — broadband, very short, gives the strike its bite
+    const noiseAtk = ctx.createBufferSource()
+    noiseAtk.buffer = getNoiseBuffer(ctx)
+    const hp = ctx.createBiquadFilter()
+    hp.type = 'highpass'
+    hp.frequency.setValueAtTime(900, t0)
+    const gAtk = ctx.createGain()
+    gAtk.gain.setValueAtTime(0, t0)
+    gAtk.gain.linearRampToValueAtTime(vol * 0.45, t0 + 0.0005)
+    gAtk.gain.exponentialRampToValueAtTime(0.0003, t0 + 0.008)
+    noiseAtk.connect(hp); hp.connect(gAtk); gAtk.connect(MASTER)
+    const atkEnd = t0 + 0.014
+    noiseAtk.start(t0); noiseAtk.stop(atkEnd)
+    handles.push({ osc: noiseAtk, gain: gAtk, scheduledEnd: atkEnd })
+
+    if (ACTIVE_TRACKER) handles.forEach((h) => ACTIVE_TRACKER.push(h))
+    return handles
+  }, [])
+
+  // Jalra = small hand cymbals. Bell-like: inharmonic sine partials with
+  // a long exponential decay, plus a brief high-frequency noise sting at
+  // the attack for the metallic "ching".
+  const scheduleJalra = useCallback((at, role = 'main') => {
+    const profile = jalraProfile(role)
+    if (!profile) return []
+    const ctx = getOrCreateCtx()
+    const t0 = safeAt(ctx, at)
+    const { baseHz, vol, dur } = profile
+    const handles = []
+
+    // Inharmonic partial ratios — pseudo-bell, not strict harmonics. The
+    // perceived pitch is the lowest one but the upper partials give the
+    // "ching" character.
+    const ratios = [1, 1.687, 2.503, 3.412, 4.832]
+    ratios.forEach((r, i) => {
+      const o = ctx.createOscillator()
+      const g = ctx.createGain()
+      o.type = 'sine'
+      o.frequency.setValueAtTime(baseHz * r, t0)
+      const partialVol = vol * (i === 0 ? 1 : 0.55 / (i + 1))
+      g.gain.setValueAtTime(0, t0)
+      g.gain.linearRampToValueAtTime(partialVol, t0 + 0.003)
+      g.gain.exponentialRampToValueAtTime(0.0003, t0 + dur)
+      o.connect(g); g.connect(MASTER)
+      const end = t0 + dur + 0.05
+      o.start(t0); o.stop(end)
+      handles.push({ osc: o, gain: g, scheduledEnd: end })
+    })
+
+    // Highpass noise burst — short metallic sting at the attack
+    const noise = ctx.createBufferSource()
+    noise.buffer = getNoiseBuffer(ctx)
+    const filter = ctx.createBiquadFilter()
+    filter.type = 'highpass'
+    filter.frequency.setValueAtTime(2500, t0)
+    const ng = ctx.createGain()
+    ng.gain.setValueAtTime(0, t0)
+    ng.gain.linearRampToValueAtTime(vol * 0.4, t0 + 0.001)
+    ng.gain.exponentialRampToValueAtTime(0.0003, t0 + 0.05)
+    noise.connect(filter); filter.connect(ng); ng.connect(MASTER)
+    const noiseEnd = t0 + 0.07
+    noise.start(t0); noise.stop(noiseEnd)
+    handles.push({ osc: noise, gain: ng, scheduledEnd: noiseEnd })
+
+    if (ACTIVE_TRACKER) handles.forEach((h) => ACTIVE_TRACKER.push(h))
+    return handles
   }, [])
 
   // Helper for the three tone-sequence playback methods. Sets up a
@@ -357,9 +521,11 @@ export function useAudioEngine() {
     getMaster: () => MASTER,
     scheduleTone,
     scheduleClick,
+    scheduleKattai,
+    scheduleJalra,
     playSequence,
     playFrequencies,
     playNotes,
     stop,
-  }), [ensureCtx, scheduleTone, scheduleClick, playSequence, playFrequencies, playNotes, stop])
+  }), [ensureCtx, scheduleTone, scheduleClick, scheduleKattai, scheduleJalra, playSequence, playFrequencies, playNotes, stop])
 }

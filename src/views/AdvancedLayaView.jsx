@@ -51,6 +51,13 @@ const REPEAT_OPTIONS = [
   { id: 'loop', label: '∞'  },
 ]
 
+const VOICE_OPTIONS = [
+  { id: 'kattai', label: 'Kattai' },
+  { id: 'jalra',  label: 'Jalra'  },
+  { id: 'beep',   label: 'Click'  },
+  { id: 'off',    label: 'Off'    },
+]
+
 const DEFAULT_RAGA_NUMBER = 15 // Mayamalavagowla
 const SWARA_VOL = 0.45
 
@@ -439,6 +446,7 @@ export default function AdvancedLayaView() {
   const [kaalam, setKaalam] = useState(1)
   const [bpm, setBpm] = useState(72)
   const [repeat, setRepeat] = useState(1) // 1, 2, 3, or 'loop'
+  const [talaVoice, setTalaVoice] = useState('kattai') // 'kattai' | 'jalra' | 'beep' | 'off'
 
   const preset = TALAM_PRESETS.find((p) => p.id === talamId) ?? TALAM_PRESETS[0]
   const tala = useMemo(() => buildTala(preset.family, preset.jathi), [preset])
@@ -491,6 +499,8 @@ export default function AdvancedLayaView() {
   const cellsRef = useRef(cycleCells)
   const landingCellRef = useRef(landingCell)
   const noteDurRef = useRef(noteDurationSec)
+  const flatBeatsRef = useRef(flatBeats)
+  const talaVoiceRef = useRef(talaVoice)
   const sourcesRef = useRef([])
   const visualTimersRef = useRef([])
   const naturalStopTimerRef = useRef(null)
@@ -501,6 +511,11 @@ export default function AdvancedLayaView() {
     setPos({ cellIdx: -1, beatIdx: 0, slotInBeat: 0, avartanamIdx: 0 })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [talamId, category, varisaiId, ragaNumber, shrutiId, nadai, kaalam, bpm, repeat])
+
+  // Tala-voice changes don't need a full restart — just sync the ref so
+  // the next scheduled beat picks the new timbre.
+  useEffect(() => { talaVoiceRef.current = talaVoice }, [talaVoice])
+  useEffect(() => { flatBeatsRef.current = flatBeats }, [flatBeats])
 
   // Keep latest values visible to the running scheduler. Note that we
   // intentionally STOP on bpm/nadai/kaalam changes above, so this is
@@ -600,6 +615,26 @@ export default function AdvancedLayaView() {
             SWARA_VOL,
           )
           if (handle) sourcesRef.current.push(handle)
+        }
+        // Tala stroke — fires once per beat (slot 0 of each beat). The
+        // landing cell IS slot 0 / beat 0 / 'clap', so it gets a final
+        // samam stroke for free, matching the resolving samam contract.
+        // We only schedule on beat boundaries here — sub-pulse ticks
+        // would clash with the swaras, which already mark every nadai
+        // subdivision.
+        if (cell.slotInBeat === 0) {
+          const beat = flatBeatsRef.current[cell.beatIdx] ?? flatBeatsRef.current[0]
+          const role = beat.action === 'clap' ? 'main' : 'sub-main'
+          const v = talaVoiceRef.current
+          if (v === 'kattai') {
+            sourcesRef.current.push(...audio.scheduleKattai(nextNoteTimeRef.current, role))
+          } else if (v === 'jalra') {
+            sourcesRef.current.push(...audio.scheduleJalra(nextNoteTimeRef.current, role))
+          } else if (v === 'beep') {
+            const h = audio.scheduleClick(nextNoteTimeRef.current, beat.action)
+            if (h) sourcesRef.current.push(h)
+          }
+          // 'off' → silent, hand pane still shows the beat
         }
         // Visual position update aligned to the audio onset. The landing
         // wraps the avartanam counter back to 0 (== samam of "next" cycle)
@@ -755,6 +790,17 @@ export default function AdvancedLayaView() {
                   className="min-w-[2.25rem]"
                 >
                   {r.label}
+                </Pill>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] uppercase tracking-[0.18em] text-saffron">Tala Sound</label>
+            <div className="inline-flex rounded-full border-2 border-gold overflow-hidden bg-cream-dark">
+              {VOICE_OPTIONS.map((v) => (
+                <Pill key={v.id} active={v.id === talaVoice} onClick={() => setTalaVoice(v.id)}>
+                  {v.label}
                 </Pill>
               ))}
             </div>
