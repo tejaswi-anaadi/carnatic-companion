@@ -482,6 +482,8 @@ const kamalajadala = {
         ['Va','ra','dha','Ve','-','la','a', 'pu','ra','Su','ro','-','tta','ma'], _kalyani),
       L(['-D','-D','-D','G','G','G','.',  'M','P','.','M','G','R','S'],
         ['Ka','ru','na','Ja','la','dhe','-', 'Ka','ma','-','laa','-','-','-'], _kalyani),
+      L(['R','.','.','S','.','.','.'],
+        ['Kaan','-','-','thaa','-','-','-'], _kalyani),
     ]},
   ],
 }
