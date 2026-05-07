@@ -488,101 +488,6 @@ const kamalajadala = {
   ],
 }
 
-// =========================================================================
-// 8. Re Re Sri Ramachandra — Aarabhi, Triputa (Tisra Jathi)
-// =========================================================================
-// Lots of mandara stayi here — descents below madhya Sa for "Sritajana"
-// and the "aiyaa-aiyaa" call-out. Mandara cells use "-X" prefix.
-const _aarabhi = SCALES.aarabhi
-const reReSriRama = {
-  id: 'reresrirama',
-  title: 'Re Re Sri Ramachandra',
-  composer: 'Traditional',
-  language: 'Sanskrit',
-  ragam: _aarabhi,
-  talam: { name: 'Triputa', jathi: 'Tisra', aksharas: 7 },
-  cellsPerAvarta: 14,
-  barsAt: [3, 5, 10, 12],
-  bigBarsAt: [7, 14],
-  source: 'shivkumar.org/music/varnams/reresrirama-arabhi-geetham.pdf',
-  meaning:
-    "O Sri Ramachandra! Beacon of the Raghu dynasty, lord of devas and ordinary mortals, " +
-    "joy of Sita, brave one who vanquished Ravana, wish-fulfilling tree to your devotees — " +
-    "protect me!",
-  sections: [
-    { label: 'Pallavi', lines: [
-      L(['P','.','P','M','M','P','.',  'M','G','R','S','R','M','G'],
-        ['Re','-','re','Shree','-','ra','-', '-','-','ma','chan','-','-','-'], _aarabhi),
-      L(['R','R','S','S','D','R','S',  'R','.','.','R','.','S','R'],
-        ['-','-','-','-','-','-','-', 'ndra','-','-','-','-','Ra','ghu'], _aarabhi),
-      L(['M','G','R','R','S','S','.',  'P','M','M','P','.','P','.'],
-        ['Vam','-','sha','Ti','la','ka','-', 'Ra','-','gha','ven','-','dra','-'], _aarabhi),
-      L(['P','M','P','M','G','R','R',  'M','G','R','S','R','S','S'],
-        ['A','-','-','-','-','-','-', 'a','-','-','-','-','-','-'], _aarabhi),
-      L(['S','-D','R','S','R','S','S',  '-D','S','.','-D','-D','-D','-P'],
-        ['A','-','-','-','-','-','-', 'a','-','-','Sri','tha','ja','na'], _aarabhi),
-      L(['-P','-M','-P','-D','S','S','.',  'R','S','R','M','G','R','R'],
-        ['Po','-','sha','ku','-','re','-', 'See','-','-','tha','-','-','Ma'], _aarabhi),
-      L(['M','G','R','M','M','P','M',  'P','.','P','P','.','P','.'],
-        ['no','-','-','ran','-','ja','nu', 'Re','-','re','Dhee','-','ra','-'], _aarabhi),
-      L(['P','M','P','D','S','S','R',  'M','G','R','S','R','S','S'],
-        ['Ra','-','va','na','-','su','ra', 'An','-','tha','ku','-','re','-'], _aarabhi),
-      L(['+S','+D','+R','+S','+R','+S','+S',  'D','+S','.','D','D','D','P'],
-        ['A','-','-','yi','ya','yi','ya', 'a','-','-','yi','ya','yi','ya'], _aarabhi),
-      L(['P','M','P','+D','+S','+S','.',  '+S','.','+S','D','D','D','P'],
-        ['A','-','-','yi','ya','re','-', 'Dhee','-','na','Ja','na','Man','-'], _aarabhi),
-      L(['P','M','P','M','G','R','R'],
-        ['daa','-','ru','Maa','-','ma','va'], _aarabhi),
-    ]},
-  ],
-}
-
-// =========================================================================
-// 9. Sri Ramachandra (Bhairavi) — Bhairavi, Dhruva Talam (Chathurasra Jathi)
-// =========================================================================
-// Dhruva Talam I4 O I4 I4 = Laghu(4) + Drutham(2) + Laghu(4) + Laghu(4) =
-// 14 aksharas in one avarta. We render at 1 cell per akshara → 14 cells per
-// line. Bars at the anga boundaries: 4, 6, 10; double-bar at 14.
-//
-// Bhairavi uses BOTH dhaivatas — D2 in arohanam phrases, D1 in avarohanam
-// phrases — so the line tokens emit "D1" / "D2" / "M1" / "M2" directly.
-const _bhairavi = SCALES.bhairavi
-const sriRamaBhairavi = {
-  id: 'srirama-bhairavi',
-  title: 'Sri Ramachandra',
-  altTitle: 'Asrita Paarijaata',
-  composer: 'Traditional',
-  language: 'Sanskrit',
-  ragam: _bhairavi,
-  talam: { name: 'Dhruva', jathi: 'Chathurasra', aksharas: 14 },
-  cellsPerAvarta: 14,
-  barsAt: [4, 6, 10],
-  bigBarsAt: [14],
-  source: 'shivkumar.org/music/varnams/srirama-bhairavi-geetham.pdf',
-  meaning:
-    "Sri Ramachandra is like the wish-granting Paarijaata tree to all his devotees. He " +
-    "delights everyone with his divine qualities, like a bee hovering over Sita's lotus-face. " +
-    "May He grant his blessings forever.",
-  sections: [
-    { label: 'Geetham', lines: [
-      L(['G','R','G','M','P','.','M','G','R','G','M','P','M','.'],
-        ['Shree','-','Raa','-','ma','-','chan','-','draa','-','Sri','tha','Paa','-'], _bhairavi),
-      L(['P','D2','N','N','D1','P','M','N','D1','P','M','G','R','S'],
-        ['-','ri','jaa','-','-','tha','Sa','ma','-','-','-','-','-','stha'], _bhairavi),
-      L(['S','R','S','P','M','P','G','R','G','M','G','G','R','S'],
-        ['Kal','-','-','ya','-','na','Gu','na','-','bhi','raa','-','-','ma'], _bhairavi),
-      L(['R','R','G','G','M','M','G','G','R','G','M','P','M','M'],
-        ['See','-','tha','-','Mu','kha','Am','-','-','-','bo','-','ru','ha'], _bhairavi),
-      L(['P','D2','D2','N','N','+S','P','D2','N','+S','+R','+G','+R','S'],
-        ['San','-','-','-','-','cha','ree','-','-','-','-','-','-','ka'], _bhairavi),
-      L(['N','+R','+S','+G','+R','+S','N','N','D1','M','P','D2','N','+S'],
-        ['Ni','ran','-','tha','ram','-','Man','-','ga','la','Ma','-','-','ta'], _bhairavi),
-      L(['P','D1','P','+S','N','+S','P','D1','M','P','G','.','R','S'],
-        ['No','-','-','tu','-','-','-','-','-','-','-','-','-','-'], _bhairavi),
-    ]},
-  ],
-}
-
 // ---------------------------------------------------------------------------
 
 export const GEETHAMS = [
@@ -593,8 +498,6 @@ export const GEETHAMS = [
   varaVeena,
   analekara,
   kamalajadala,
-  reReSriRama,
-  sriRamaBhairavi,
 ]
 
 export function getGeethamById(id) {
