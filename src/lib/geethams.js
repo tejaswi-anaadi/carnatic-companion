@@ -468,7 +468,7 @@ const kamalajadala = {
     "Velapura — you are the greatest among the gods.",
   sections: [
     { label: 'Geetham', lines: [
-      L(['S','S','S','N','D','N','S',  'N','D','P','D','P','M','P'],
+      L(['+S','+S','+S','N','D','N','+S',  'N','D','P','D','P','M','P'],
         ['Ka','ma','la','jaa','-','da','la', 'Vi','ma','la','Su','na','ya','na'], _kalyani),
       L(['G','M','P','P','D','D','N',  'D','P','M','P','G','R','S'],
         ['Ka','ri','Va','ra','da','-','-', 'Ka','ru','naa','mbu','dhe','-','-'], _kalyani),
