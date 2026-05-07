@@ -417,7 +417,7 @@ const analekara = {
     "same way, a life lived without the awareness of the ancient scriptures is wasted.",
   sections: [
     { label: 'Pallavi', lines: [
-      L(['R','M','R','R','S','D','+S',  '+S','.','+S','D','P','M','P'],
+      L(['+R','+M','+R','+R','+S','D','+S',  '+S','.','+S','D','P','M','P'],
         ['A','-','na','le','-','ka','ra', 'un','-','ni','po','-','la','di'], _suddhaSaveri),
       L(['D','D','+S','D','.','D','P',  'P','M','R','D','D','D','P'],
         ['sa','ka','la','sha','-','sthrapu','-', 'ra','-','na','di','-','nam','-'], _suddhaSaveri),
