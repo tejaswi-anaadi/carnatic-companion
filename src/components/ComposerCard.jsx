@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Calendar, MapPin, Heart, Quote, Music, BookOpen, Sparkles, ChevronDown, ChevronUp, Mic2, Tag, GraduationCap, Flame, ScrollText } from 'lucide-react'
+import { Calendar, MapPin, Heart, Quote, Music, BookOpen, Sparkles, ChevronDown, ChevronUp, Mic2, Tag, GraduationCap, Flame, ScrollText, Link as LinkIcon } from 'lucide-react'
 import PilgrimageMap from './PilgrimageMap.jsx'
 
 function Section({ icon: Icon, title, children, defaultOpen = false }) {
@@ -189,6 +189,23 @@ export default function ComposerCard({ composer }) {
           </Section>
         )}
       </div>
+
+      {/* Citations */}
+      {composer.citations && composer.citations.length > 0 && (
+        <div className="space-y-2 mb-5">
+          <h4 className="text-xs uppercase tracking-[0.2em] text-saffron font-semibold">Sources & Further Reading</h4>
+          <ul className="space-y-1">
+            {composer.citations.map((citation, i) => (
+              <li key={i} className="text-[12px] text-ink/70 flex items-center gap-1.5">
+                <LinkIcon className="w-3 h-3 text-crimson/70 shrink-0" />
+                <a href={citation.url} target="_blank" rel="noopener noreferrer" className="hover:text-crimson hover:underline truncate">
+                  {citation.source}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Pilgrimage Trail — always visible */}
       <div className="space-y-2">

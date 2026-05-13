@@ -78,11 +78,12 @@ export const TRINITY = [
     ],
 
     legacy:
-      'Tyagaraja attained samadhi on Pushya Bahula Panchami (January 6, 1847) at Tiruvaiyaru, on the banks of ' +
-      'the river Kaveri. The annual Tyagaraja Aradhana, held at his samadhi each January, is the largest gathering ' +
-      'of Carnatic musicians in the world. Thousands of musicians sing his Pancharatna Kritis in unison — a tradition ' +
-      'that has continued unbroken for over 175 years. His approximately 700 surviving compositions form the backbone ' +
-      'of the Carnatic concert repertoire.',
+      'Tyagaraja passed away on January 6, 1847, after taking sanyasa (renunciation) just days prior. ' +
+      'His monumental legacy was preserved not by blood descendants, but by his vast network of disciples ' +
+      '(the Sishya Parampara). Prominent disciples included Venkataramana Bhagavatar and Krishnaswamy Bhagavatar ' +
+      '(of the Walajapet school), Veena Kuppayyar, and Manambuchavadi Venkatasubbayyar. These disciples meticulously ' +
+      'documented and propagated his kritis. Today, the Tyagaraja Aradhana held every January in Tiruvaiyaru is the largest ' +
+      'gathering of Carnatic musicians in the world, where thousands sing his Pancharatna Kritis in unison.',
 
     pilgrimage: [
       { temple: 'Thyagaraja Temple', town: 'Tiruvarur', note: 'Birthplace — family deity' },
@@ -93,6 +94,12 @@ export const TRINITY = [
       { temple: 'Tirupati Venkateswara', town: 'Tirupati', note: 'Sang "Tera Teeyaga Radha"; curtain said to have parted' },
       { temple: 'Varadaraja Perumal', town: 'Kanchipuram', note: 'Visited the revered sage Upanishad Brahmam; composed kshetra kritis' },
       { temple: 'Sundareswarar', town: 'Nagapattinam', note: 'Composed kshetra kritis during 1839 pilgrimage' },
+    ],
+
+    citations: [
+      { source: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Tyagaraja' },
+      { source: 'The Hindu', url: 'https://www.thehindu.com/entertainment/music/the-story-of-tyagarajas-favourite-disciple/article32575407.ece' },
+      { source: 'Radha Krishna Temple', url: 'https://www.radhakrishnatemple.net/blog/the-eternal-song-of-devotion-the-story-of-saint-tyagaraja-and-the-legacy-of-bhakti-through-music/' },
     ],
   },
   {
@@ -109,7 +116,8 @@ export const TRINITY = [
 
     earlyLife:
       'Born on March 24, 1775, in Tiruvarur, to Ramaswami Dikshitar and Subbamma. His father was a distinguished ' +
-      'scholar, musician, and composer — often credited with creating the raga Hamsadhwani. He had two younger brothers: ' +
+      'scholar, musician, and composer — often credited with creating the raga Hamsadhwani. He was named Muthuswami ' +
+      '(which means pearl in Tamil) possibly after Selvamuthukumaraswamy, a deity of the Vaitheeswaran Koil. He had two younger brothers: ' +
       'Chinnaswami and Baluswami (who pioneered the adaptation of the Western violin to Carnatic music), and a sister, ' +
       'Balambal. Raised in a household steeped in Vedic learning and musical tradition, young Muthuswami received his ' +
       'foundational education in Sanskrit, the Vedas, and music from his father.',
@@ -117,7 +125,7 @@ export const TRINITY = [
     guruTraining:
       'In his youth, Muthuswami was taken on a transformative pilgrimage to North India by the wandering monk ' +
       'Chidambaranatha Yogi. During an extended stay in Varanasi (Kashi), he gained deep knowledge of Tantric Yoga, ' +
-      'the Shastras, and was exposed to the Dhrupad style of Hindustani singing — which profoundly influenced his slow, ' +
+      'the Shastras, and was exposed to the Dhrupad style of Hindustani singing. This exposure profoundly influenced his slow, ' +
       'meditative compositional tempo. When Chidambaranatha Yogi passed away (his samadhi is at Hanuman Ghat, Varanasi), ' +
       'he instructed Dikshitar to travel to Tiruttani. There, while meditating on the temple steps, Lord Muruga appeared ' +
       'in the guise of an old man, placed sugar candy in his mouth, and vanished. Dikshitar immediately burst into his ' +
@@ -157,6 +165,7 @@ export const TRINITY = [
       { name: 'Kamalamba Navavarana', desc: '11 kritis mapping the nine avaranas of the Sri Chakra — apex of Sri Vidya in music' },
       { name: 'Navagraha Kritis', desc: '9 compositions on the celestial bodies, each in a different Suladi Sapta Tala' },
       { name: 'Pancha Bhuta Kritis', desc: '5 kritis on the five elemental Shiva temples (Chidambaram, Kanchipuram, Tiruvannamalai, Tiruvanaikaval, Srikalahasti)' },
+      { name: 'Nilotpalamba Vibhakti Kritis', desc: 'A group of kritis in praise of Goddess Nilotpalamba of Tiruvarur' },
       { name: 'Pancha Linga Sthala Kritis', desc: 'Compositions at Pancha Linga Sthalas during his extensive pilgrimages' },
       { name: 'Nottuswara Sahityas', desc: '~40 Sanskrit songs set to Western tunes, bridging East and West' },
     ],
@@ -195,6 +204,11 @@ export const TRINITY = [
       { temple: 'Jambukeswarar', town: 'Tiruvanaikaval', note: 'Pancha Bhuta — Jala (Water); composed Jambupate Mam Pahi' },
       { temple: 'Ettayapuram Subramania', town: 'Ettayapuram', note: 'Final abode; samadhi site' },
     ],
+
+    citations: [
+      { source: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Muthuswami_Dikshitar' },
+      { source: 'Wikipedia (Compositions)', url: 'https://en.wikipedia.org/wiki/List_of_compositions_by_Muthuswami_Dikshitar' },
+    ],
   },
   {
     id: 'syamasastri',
@@ -209,20 +223,21 @@ export const TRINITY = [
     compositionCount: '~300 (around 50 preserved)',
 
     earlyLife:
-      'Born Venkata Subrahmanya on April 26, 1762, in Tiruvarur — the eldest of the Trinity. He belonged to a ' +
+      'Born Venkata Subrahmanya Iyer on April 26, 1762, in Tiruvarur, he was the eldest of the Trinity. He belonged to a ' +
       'scholarly Tamil-speaking Smartha Vadama Brahmin family who were hereditary priests (archakas) of the Goddess ' +
       'Bangaru Kamakshi. The family\'s ancestral home was in Kanchipuram; following the fall of the Vijayanagar Empire ' +
       'in 1565, they carried the deity\'s golden idol southward, eventually settling in Tiruvarur. In 1781, due to ' +
       'threats of invasion by Hyder Ali, his father requested the Maratha ruler Tulajaji to relocate the temple to ' +
       'Tanjavur. The request was granted, and the Bangaru Kamakshi Amman Temple was built in Tanjavur, where the ' +
-      'family continued their duties as head priests.',
+      'family continued their duties as head priests. To later generations, he is better known by his adopted name Syama Sastri or by his musical mudra (signature) Syama Krishna.',
 
     guruTraining:
-      'Syama Sastri received his initial musical instruction from his father. After the family moved to Tanjavur ' +
-      'around 1781, he received advanced training from the renowned court musician Paccimiriyam Adiyappayya. He was ' +
-      'also deeply influenced by a wandering sanyasi named Sangita Swami, who guided him in the intricacies of raga ' +
-      'and tala. This dual training — the rigorous court tradition of Adiyappayya and the mystical, improvisatory ' +
-      'approach of Sangita Swami — gave Syama Sastri a uniquely scholarly yet deeply devotional compositional voice.',
+      'Syama Sastri received his initial musical instruction from his maternal uncle. After the family moved to Tanjavur ' +
+      'around 1781, his path changed when a wandering sanyasi named Sangita Swami visited his home. Recognizing the young ' +
+      'boy\'s talent, Sangita Swami guided him in the intricacies of raga and tala, and became his first guru. Later, on ' +
+      'Sangita Swami\'s advice, Syama Sastri met the renowned court musician Paccimiriyam Adiyappayya (composer of the famous Viriboni varnam), ' +
+      'and became his devoted disciple. This dual training — the rigorous court tradition of Adiyappayya and the mystical, ' +
+      'improvisatory approach of Sangita Swami — gave Syama Sastri a uniquely scholarly yet deeply devotional compositional voice.',
 
     sadhana:
       'Syama Sastri\'s entire musical life was an act of worship at the feet of his family deity, Bangaru Kamakshi. ' +
@@ -258,6 +273,7 @@ export const TRINITY = [
       { name: 'Svarajatis', desc: 'Pioneered the svarajati as concert form; his three jewels remain the finest examples ever composed' },
       { name: 'Kritis on Kamakshi', desc: 'Most compositions dedicated to Bangaru Kamakshi and Kamakshi of Kanchipuram' },
       { name: 'Rare Tala Compositions', desc: 'Works in Simhanandana (128 beats), Sarabhanandana (79 beats), and complex Mishra Chapu patterns' },
+      { name: 'Navaratnamalika', desc: 'A famous garland of nine kritis dedicated to Goddess Meenakshi of Madurai' },
     ],
 
     anecdotes: [
@@ -289,6 +305,11 @@ export const TRINITY = [
       { temple: 'Meenakshi Amman', town: 'Madurai', note: 'Composed Navaratnamalika on Goddess Meenakshi' },
       { temple: 'Brihadeeswarar', town: 'Tanjavur', note: 'The great Chola temple; composed kshetra kritis' },
       { temple: 'Thyagaraja Temple', town: 'Tiruvarur', note: 'Birthplace; the temple that connects all three of the Trinity' },
+    ],
+
+    citations: [
+      { source: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Syama_Sastri' },
+      { source: 'Scribd (Shyama Shastri: Legacy of Carnatic Music)', url: 'https://www.scribd.com/document/859109196/Shyama-Shastri' },
     ],
   },
 ]
