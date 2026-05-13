@@ -95,6 +95,12 @@ export const TRINITY = [
       { temple: 'Varadaraja Perumal', town: 'Kanchipuram', note: 'Visited the revered sage Upanishad Brahmam; composed kshetra kritis' },
       { temple: 'Sundareswarar', town: 'Nagapattinam', note: 'Composed kshetra kritis during 1839 pilgrimage' },
     ],
+
+    citations: [
+      { source: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Tyagaraja' },
+      { source: 'The Hindu', url: 'https://www.thehindu.com/entertainment/music/the-story-of-tyagarajas-favourite-disciple/article32575407.ece' },
+      { source: 'Radha Krishna Temple', url: 'https://www.radhakrishnatemple.net/blog/the-eternal-song-of-devotion-the-story-of-saint-tyagaraja-and-the-legacy-of-bhakti-through-music/' },
+    ],
   },
   {
     id: 'dikshitar',
@@ -198,6 +204,11 @@ export const TRINITY = [
       { temple: 'Jambukeswarar', town: 'Tiruvanaikaval', note: 'Pancha Bhuta — Jala (Water); composed Jambupate Mam Pahi' },
       { temple: 'Ettayapuram Subramania', town: 'Ettayapuram', note: 'Final abode; samadhi site' },
     ],
+
+    citations: [
+      { source: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Muthuswami_Dikshitar' },
+      { source: 'Wikipedia (Compositions)', url: 'https://en.wikipedia.org/wiki/List_of_compositions_by_Muthuswami_Dikshitar' },
+    ],
   },
   {
     id: 'syamasastri',
@@ -294,6 +305,11 @@ export const TRINITY = [
       { temple: 'Meenakshi Amman', town: 'Madurai', note: 'Composed Navaratnamalika on Goddess Meenakshi' },
       { temple: 'Brihadeeswarar', town: 'Tanjavur', note: 'The great Chola temple; composed kshetra kritis' },
       { temple: 'Thyagaraja Temple', town: 'Tiruvarur', note: 'Birthplace; the temple that connects all three of the Trinity' },
+    ],
+
+    citations: [
+      { source: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Syama_Sastri' },
+      { source: 'Scribd (Shyama Shastri: Legacy of Carnatic Music)', url: 'https://www.scribd.com/document/859109196/Shyama-Shastri' },
     ],
   },
 ]
