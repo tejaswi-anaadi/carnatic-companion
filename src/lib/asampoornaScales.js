@@ -397,7 +397,7 @@ export const ASAMPOORNA_SCALES = {
     arohanam: ['S', 'R2', 'G2', 'M2', 'P', 'D1', "S'"],
     avarohanam: ["S'", 'N1', 'D1', 'P', 'M2', 'G2', 'R2', 'S'],
     sameAsParent: false,
-    note: 'Shadava arohana (drops Ni); avarohana sampoorna. Parent: Shamalangi.',
+    note: 'Shadava arohana (drops Ni); avarohana sampoorna. Parent: Shyamalangi.',
   },
   56: {
     name: 'Chamaram',

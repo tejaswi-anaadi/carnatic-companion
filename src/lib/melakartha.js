@@ -45,7 +45,7 @@ export const GOVINDA_NAMES = [
   'Salagam','Jalarnavam','Jhalavarali','Navaneetham','Pavani','Raghupriya',
   'Gavambodhi','Bhavapriya','Subhapantuvarali','Shadvidhamargini','Suvarnangi','Divyamani',
   'Dhavalambari','Namanarayani','Kamavardhini','Ramapriya','Gamanashrama','Vishwambhari',
-  'Shamalangi','Shanmukhapriya','Simhendramadhyamam','Hemavathi','Dharmavathi','Neethimathi',
+  'Shyamalangi','Shanmukhapriya','Simhendramadhyamam','Hemavathi','Dharmavathi','Neethimathi',
   'Kantamani','Rishabhapriya','Latangi','Vachaspathi','Mechakalyani','Chitrambari',
   'Sucharitra','Jyothiswarupini','Dhatuvardhani','Nasikabhushani','Kosalam','Rasikapriya',
 ]

@@ -101,7 +101,7 @@ export const GOVINDA_DEVANAGARI = [
   'गमनाश्रम',       // 53 Gamanashrama
   'विश्वंबरि',       // 54 Vishwambhari
   // Disi chakra (55-60)
-  'श्यामलांगि',     // 55 Shamalangi
+  'श्यामलांगि',     // 55 Shyamalangi
   'षण्मुखप्रिय',    // 56 Shanmukhapriya
   'सिंहेंद्रमध्यमम्',// 57 Simhendramadhyamam
   'हेमावति',        // 58 Hemavathi

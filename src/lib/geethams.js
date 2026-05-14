@@ -216,7 +216,7 @@ const kundaGowra = {
       L(['S','.','R','.','R','.',  'D','P','M','G','R','S'],
         ['Man','-','da','-','ra','-', 'ku','su','ma','-','ka','ra'], _malahari),
       L(['S','R','M','.','G','R',  'S','R','G','R','S','.'],
-        ['Ma','ka','ran','-','dam','-', 'va','-','si','thu','va','-'], _malahari),
+        ['Ma','ka','ran','-','tam','-', 'va','-','si','thu','va','-'], _malahari),
     ]},
     { label: 'Charanam 1', lines: [
       L(['D','P','M','G','R','S',  'R','M','P','D','M','P'],
@@ -227,18 +227,18 @@ const kundaGowra = {
       L(['S','.','R','.','R','.',  'D','P','M','G','R','S'],
         ['Man','-','da','-','ra','-', 'ku','su','ma','-','ka','ra'], _malahari),
       L(['S','R','M','.','G','R',  'S','R','G','R','S','.'],
-        ['Ma','ka','ran','-','dam','-', 'va','-','si','thu','va','-'], _malahari),
+        ['Ma','ka','ran','-','tam','-', 'va','-','si','thu','va','-'], _malahari),
     ]},
     { label: 'Charanam 2', lines: [
       L(['D','P','M','G','R','S',  'R','M','P','D','M','P'],
-        ['Chan','da','ma','-','-','ma', 'man','-','da','-','gi','ni'], _malahari),
+        ['Chan','da','ma','-','-','ma', 'man','-','da','-','ki','ni'], _malahari),
       L(['D','+R','+R','+S','D','P',  'D','P','M','G','R','S'],
         ['Man','-','di','ra','-','ya', 'ma','-','na','ma','ku','ta'], _malahari),
       // (Man) — same Anupallavi return as Charanam 1.
       L(['S','.','R','.','R','.',  'D','P','M','G','R','S'],
         ['Man','-','da','-','ra','-', 'ku','su','ma','-','ka','ra'], _malahari),
       L(['S','R','M','.','G','R',  'S','R','G','R','S','.'],
-        ['Ma','ka','ran','-','dam','-', 'va','-','si','thu','va','-'], _malahari),
+        ['Ma','ka','ran','-','tam','-', 'va','-','si','thu','va','-'], _malahari),
     ]},
   ],
 }
@@ -267,11 +267,11 @@ const padumanaabha = {
     { label: 'Pallavi', lines: [
       L(['R','S','-D','S','.','S','.',  'M','G','R','M','M','P','.'],
         ['Pa','du','ma','na','-','bha','-', 'pa','ra','ma','pu','ru','sha','-'], _malahari),
-      L(['S','D','D','D','P','M','P',  'D','D','P','M','G','R','S'],
+      L(['S','D','.','D','P','M','P',  'D','D','P','M','G','R','S'],
         ['Pa','ram','-','jo','-','-','thi', 'swa','ru','-','pa','-','-','-'], _malahari),
       L(['R','S','-D','S','.','S','.',  'M','G','R','M','M','P','.'],
         ['Vi','du','ra','van','-','dhia','-', 'vi','ma','la','cha','ri','tha','-'], _malahari),
-      L(['S','D','D','D','P','M','P',  'D','D','P','M','G','R','S'],
+      L(['S','D','.','D','P','M','P',  'D','D','P','M','G','R','S'],
         ['Vi','hang','-','ga','-','-','di', 'ro','-','ha','na','-','-','-'], _malahari),
     ]},
     { label: 'Anupallavi', lines: [
@@ -281,8 +281,8 @@ const padumanaabha = {
         ['U','-','nna','tho','-','nna','tha', 'ma','hi','-','ma','-','-','-'], _malahari),
       L(['D','D','P','P','.','P','M',  'R','.','M','M','G','R','S'],
         ['Ya','du','ku','lo','-','ttha','ma', 'ye','-','gna','ra','-','ksha','ka'], _malahari),
-      L(['S','.','S','D','D','D','P',  'P','.','P','M','G','R','S'],
-        ['A','-','gna','si','-','ksha','ka', 'ra','-','ma','na','-','-','ma'], _malahari),
+      L(['S','.','S','D','.','D','P',  'P','.','P','M','G','R','S'],
+        ['Ya','-','gna','si','-','ksha','ka', 'ra','-','ma','na','-','-','ma'], _malahari),
     ]},
     { label: 'Charanam', lines: [
       L(['D','+S','.','D','P','M','P',  'D','D','P','M','G','R','S'],
