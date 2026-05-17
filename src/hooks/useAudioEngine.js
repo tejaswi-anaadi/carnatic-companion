@@ -100,6 +100,46 @@ if (typeof document !== 'undefined') {
   })
   window.addEventListener('focus', wake)
   window.addEventListener('pageshow', wake)
+
+  // -----------------------------------------------------------------------
+  // iOS Safari Web Audio unlock.
+  //
+  // Symptom on iPhone: tap Play, nothing happens, no errors. Cause: iOS
+  // Safari leaves a freshly-created AudioContext in 'suspended' state even
+  // when ctx.resume() is called from inside a tap handler — *unless* a
+  // sound source is also started synchronously in that same gesture. The
+  // canonical fix is to play a one-sample silent buffer on the very first
+  // user interaction, anywhere in the document. After that, the context
+  // stays unlocked for the life of the page.
+  //
+  // We bind in capture phase so this unlock runs *before* the Play
+  // button's own click handler — so even the user's very first tap on
+  // Play succeeds in producing sound rather than requiring a "warmup" tap.
+  // Bound on touchstart/touchend/mousedown/click for maximum coverage
+  // (different iOS versions accept different events as gestures).
+  // -----------------------------------------------------------------------
+  const UNLOCK_EVENTS = ['touchstart', 'touchend', 'mousedown', 'click', 'keydown']
+  const unlockOnce = () => {
+    try {
+      const ctx = getOrCreateCtx()
+      // Synchronous resume — must be called from the gesture frame.
+      ctx.resume().catch(() => { /* ignored */ })
+      // Silent 1-sample buffer played at t=0 — this is what actually
+      // unlocks the audio output route on iOS.
+      const buf = ctx.createBuffer(1, 1, 22050)
+      const src = ctx.createBufferSource()
+      src.buffer = buf
+      src.connect(ctx.destination)
+      src.start(0)
+      ensureMasterConnected(ctx)
+    } catch (_e) { /* ignore — best-effort */ }
+    for (const ev of UNLOCK_EVENTS) {
+      document.removeEventListener(ev, unlockOnce, true)
+    }
+  }
+  for (const ev of UNLOCK_EVENTS) {
+    document.addEventListener(ev, unlockOnce, { capture: true, passive: true })
+  }
 }
 
 function safeAt(ctx, at) {
